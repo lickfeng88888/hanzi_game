@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字连线找朋友 - 汉字游戏乐园</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/connectLine.css">
+</head>
+<body class="game-page">
+    <header>
+        <div class="header-content">
+            <a href="../index.html" class="back-button">返回主页</a>
+            <h1>文字连线找朋友</h1>
+            <div class="game-controls">
+                <select id="gameMode">
+                    <option value="pinyin">汉字与拼音</option>
+                    <option value="meaning">词语与词义</option>
+                    <option value="antonym">反义词匹配</option>
+                </select>
+                <button id="soundToggle" class="icon-button">🔊</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="game-container">
+            <div class="game-info">
+                <div class="score">得分：<span id="score">0</span></div>
+                <div class="level">关卡：<span id="level">1</span></div>
+                <div class="timer">时间：<span id="timer">60</span>秒</div>
+            </div>
+
+            <div class="game-area">
+                <div class="connection-area">
+                    <div class="left-column">
+                        <!-- 左侧词语将在这里生成 -->
+                    </div>
+                    <canvas id="connectionCanvas"></canvas>
+                    <div class="right-column">
+                        <!-- 右侧释义将在这里生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="checkAnswer" class="game-button">检查答案</button>
+                <button id="clearLines" class="game-button">清除连线</button>
+                <button id="nextLevel" class="game-button" disabled>下一关</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <h2 id="resultTitle"></h2>
+            <p id="resultMessage"></p>
+            <div id="explanationArea"></div>
+            <button id="closeModal" class="game-button">确定</button>
+        </div>
+    </div>
+
+    <script src="../data/connectLine/questions.js"></script>
+    <script src="../js/games/connectLine.js"></script>
+</body>
+</html>

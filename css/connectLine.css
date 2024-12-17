@@ -1,0 +1,216 @@
+/* 游戏页面特定样式 */
+.game-page {
+    background-color: #f5f6fa;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.back-button {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 2px solid white;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: white;
+    color: #4CAF50;
+}
+
+.game-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+/* 游戏容器 */
+.game-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* 游戏信息区域 */
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.timer {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* 游戏区域 */
+.game-area {
+    padding: 1rem;
+    min-height: 400px;
+}
+
+/* 连线区域 */
+.connection-area {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    min-height: 400px;
+    margin: 1rem 0;
+}
+
+.left-column, .right-column {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    z-index: 1;
+}
+
+/* 连线画布 */
+#connectionCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* 词语和释义项 */
+.word-item, .meaning-item {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.word-item:hover, .meaning-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.word-item.selected, .meaning-item.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.word-item.correct, .meaning-item.correct {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.word-item.wrong, .meaning-item.wrong {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* 控制按钮 */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.game-button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.game-button:hover {
+    background-color: #45a049;
+}
+
+.game-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 模态框 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+#explanationArea {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: left;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .game-controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .connection-area {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .left-column, .right-column {
+        width: 100%;
+    }
+
+    #connectionCanvas {
+        display: none;
+    }
+
+    .word-item, .meaning-item {
+        margin: 0.5rem 0;
+    }
+}
