@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼音拖拽填空 - 汉字游戏乐园</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/pinyinDrag.css">
+</head>
+<body>
+    <nav class="game-nav">
+        <a href="../index.html" class="back-button">
+            <span class="back-icon">←</span>
+            返回主页
+        </a>
+    </nav>
+    <div class="game-container">
+        <header>
+            <h1>拼音拖拽填空</h1>
+            <p>根据拼音提示，拖拽正确的汉字到对应位置！</p>
+        </header>
+
+        <div class="game-info">
+            <div>
+                <label for="difficulty">难度：</label>
+                <select id="difficulty">
+                    <option value="easy">初级（单字）</option>
+                    <option value="medium">中级（词语）</option>
+                    <option value="hard">高级（句子）</option>
+                </select>
+            </div>
+            <div>
+                <span>分数：<span id="score">0</span></span>
+                <span>关卡：<span id="level">1</span></span>
+                <button id="soundToggle">🔊</button>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <div id="questionText" class="question-text"></div>
+            <div id="pinyinHints" class="pinyin-hints"></div>
+        </div>
+
+        <div class="answer-container">
+            <div id="dropZones" class="drop-zones">
+                <!-- 拖放区域将由JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <div class="characters-container">
+            <div id="characterChoices" class="character-choices">
+                <!-- 汉字选项将由JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button id="checkAnswer">检查答案</button>
+            <button id="showHint">显示提示</button>
+            <button id="resetAnswer">重置答案</button>
+            <button id="nextQuestion" disabled>下一题</button>
+        </div>
+
+        <div id="resultModal" class="modal">
+            <div class="modal-content">
+                <h2 id="resultTitle" class="modal-title"></h2>
+                <p id="resultMessage" class="modal-message"></p>
+                <div id="explanation" class="explanation"></div>
+                <button id="closeModal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../data/pinyinDrag/questions.js"></script>
+    <script src="../js/games/pinyinDrag.js"></script>
+</body>
+</html>

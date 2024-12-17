@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组词接龙闯关 - 汉字游戏乐园</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/wordChain.css">
+</head>
+<body>
+    <nav class="game-nav">
+        <a href="../index.html" class="back-button">
+            <span class="back-icon">←</span>
+            返回主页
+        </a>
+    </nav>
+    <div class="game-container">
+        <header>
+            <h1>组词接龙闯关</h1>
+            <p>用词语接龙的方式，考验你的词汇量！</p>
+        </header>
+
+        <div class="game-info">
+            <div>
+                <label for="difficulty">难度：</label>
+                <select id="difficulty">
+                    <option value="easy">初级（常用词）</option>
+                    <option value="medium">中级（成语）</option>
+                    <option value="hard">高级（诗词）</option>
+                </select>
+            </div>
+            <div>
+                <span>分数：<span id="score">0</span></span>
+                <span>关卡：<span id="level">1</span></span>
+                <button id="soundToggle">🔊</button>
+            </div>
+        </div>
+
+        <div class="game-board">
+            <div class="word-chain">
+                <!-- 词语链将在这里动态生成 -->
+            </div>
+            
+            <div class="current-word">
+                <div class="last-char"></div>
+                <input type="text" id="wordInput" placeholder="输入接龙词语..." maxlength="4">
+                <button id="submitWord">确认</button>
+            </div>
+
+            <div class="timer">
+                剩余时间：<span id="timeLeft">60</span>秒
+            </div>
+        </div>
+
+        <div class="word-choices">
+            <div id="wordSuggestions" class="suggestions">
+                <!-- 建议词语将在这里动态生成 -->
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button id="showHint">显示提示</button>
+            <button id="skipWord">跳过</button>
+            <button id="nextLevel" disabled>下一关</button>
+        </div>
+
+        <div class="word-history">
+            <h3>已用词语</h3>
+            <div id="usedWords" class="used-words">
+                <!-- 已使用的词语将在这里显示 -->
+            </div>
+        </div>
+
+        <div id="resultModal" class="modal">
+            <div class="modal-content">
+                <h2 id="resultTitle" class="modal-title"></h2>
+                <p id="resultMessage" class="modal-message"></p>
+                <div id="wordExplanation" class="word-explanation"></div>
+                <button id="closeModal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../data/wordChain/questions.js"></script>
+    <script src="../js/games/wordChain.js"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+/* 导航栏样式 */
+.game-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #e8f5e9;
+    transform: translateX(-5px);
+}
+
+.back-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+/* 游戏容器样式 */
+.game-container {
+    max-width: 800px;
+    margin: 60px auto 20px;
+    padding: 20px;
+    font-family: 'Microsoft YaHei', sans-serif;
+}
+
+/* 游戏信息栏 */
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.game-info > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 问题区域 */
+.question-container {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.question-text {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.pinyin-hints {
+    color: #666;
+    font-size: 1.2em;
+}
+
+/* 答案区域 */
+.answer-container {
+    margin: 20px 0;
+}
+
+.drop-zones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    min-height: 100px;
+}
+
+.drop-zone {
+    width: 60px;
+    height: 60px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.drop-zone.hover {
+    border-color: #4CAF50;
+    background-color: #e8f5e9;
+}
+
+.drop-zone.filled {
+    border-style: solid;
+    border-color: #4CAF50;
+}
+
+/* 汉字选择区域 */
+.characters-container {
+    margin: 20px 0;
+}
+
+.character-choices {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.character {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3em;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 8px;
+    cursor: move;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.character:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.character.dragging {
+    opacity: 0.5;
+}
+
+/* 按钮样式 */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#checkAnswer {
+    background-color: #2196f3;
+    color: white;
+}
+
+#checkAnswer:hover:not(:disabled) {
+    background-color: #1976d2;
+}
+
+#showHint {
+    background-color: #ff9800;
+    color: white;
+}
+
+#showHint:hover:not(:disabled) {
+    background-color: #f57c00;
+}
+
+#resetAnswer {
+    background-color: #f44336;
+    color: white;
+}
+
+#resetAnswer:hover:not(:disabled) {
+    background-color: #d32f2f;
+}
+
+#nextQuestion {
+    background-color: #4caf50;
+    color: white;
+}
+
+#nextQuestion:hover:not(:disabled) {
+    background-color: #388e3c;
+}
+
+/* 结果模态框 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-title {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-message {
+    color: #666;
+    margin: 10px 0;
+}
+
+.explanation {
+    text-align: left;
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    line-height: 1.6;
+}
+
+/* 动画效果 */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+.bounce {
+    animation: bounce 0.5s ease-in-out;
+}
