@@ -1,4 +1,5 @@
-const gameQuestions = {
+// 词语拖拽游戏题库
+window.gameQuestions = {
     easy: [
         {
             word: "苹果",

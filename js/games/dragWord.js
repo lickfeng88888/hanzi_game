@@ -60,24 +60,13 @@ function playSound(type) {
 
 // 初始化游戏
 function initGame() {
-    loadGameQuestions();
+    startNewQuestion();
     difficultySelect.addEventListener('change', handleDifficultyChange);
     soundToggle.addEventListener('click', toggleSound);
     checkAnswerButton.addEventListener('click', checkAnswer);
     nextQuestionButton.addEventListener('click', nextQuestion);
     hintButton.addEventListener('click', showHint);
     closeModal.addEventListener('click', () => modal.style.display = 'none');
-}
-
-// 加载游戏题目
-async function loadGameQuestions() {
-    try {
-        await import('../data/dragWord/questions.js');
-        startNewQuestion();
-    } catch (error) {
-        console.error('Error loading questions:', error);
-        questionText.textContent = '加载题目失败，请刷新页面重试。';
-    }
 }
 
 // 开始新问题
@@ -117,6 +106,7 @@ function startNewQuestion() {
     // 设置提示
     questionText.textContent = '请将汉字拖到正确的位置组成词语：';
     pinyinHint.textContent = currentQuestion.pinyin;
+    pinyinHint.style.visibility = 'hidden';
     
     // 设置拖放区域事件
     dropArea.addEventListener('dragover', handleDragOver);
@@ -144,9 +134,9 @@ function handleDragOver(e) {
 function handleDrop(e) {
     e.preventDefault();
     const char = e.dataTransfer.getData('text/plain');
-    const target = e.target;
+    const target = e.target.closest('.drop-slot');
     
-    if (target.classList.contains('drop-slot') && !target.hasChildNodes()) {
+    if (target && !target.hasChildNodes()) {
         const charElement = document.querySelector(`.character[data-char="${char}"]`);
         if (charElement) {
             target.appendChild(charElement);
@@ -240,4 +230,4 @@ function shuffleArray(array) {
 }
 
 // 初始化游戏
-initGame();
+document.addEventListener('DOMContentLoaded', initGame);
