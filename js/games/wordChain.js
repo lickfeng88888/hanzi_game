@@ -7,6 +7,7 @@ let timer = null;
 let currentWord = '';
 let usedWords = new Set();
 let soundEnabled = true;
+let audioContext = null;
 
 // DOM 元素
 const difficultySelect = document.getElementById('difficulty');
@@ -26,14 +27,21 @@ const usedWordsDisplay = document.getElementById('usedWords');
 const modal = document.getElementById('resultModal');
 const modalTitle = document.getElementById('resultTitle');
 const modalMessage = document.getElementById('resultMessage');
-const wordExplanation = document.getElementById('wordExplanation');
 const closeModal = document.getElementById('closeModal');
 
-// 音效
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// 初始化音频上下文
+function initAudio() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+    }
+}
 
+// 音效
 function playSound(type) {
-    if (!soundEnabled) return;
+    if (!soundEnabled || !audioContext) return;
 
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
@@ -66,6 +74,9 @@ function playSound(type) {
 
 // 初始化游戏
 function initGame() {
+    // 初始化音频（需要用户交互）
+    document.addEventListener('click', initAudio, { once: true });
+    
     difficultySelect.addEventListener('change', handleDifficultyChange);
     soundToggle.addEventListener('click', toggleSound);
     wordInput.addEventListener('input', handleInput);
@@ -99,6 +110,31 @@ function startLevel() {
     startTimer();
 }
 
+// 开始计时器
+function startTimer() {
+    if (timer) {
+        clearInterval(timer);
+    }
+    
+    updateTimeDisplay();
+    timer = setInterval(() => {
+        timeLeft--;
+        updateTimeDisplay();
+        
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            showTimeUp();
+        }
+    }, 1000);
+}
+
+// 更新时间显示
+function updateTimeDisplay() {
+    if (timeLeftDisplay) {
+        timeLeftDisplay.textContent = timeLeft;
+    }
+}
+
 // 更新词语链显示
 function updateWordChain() {
     wordChainDisplay.innerHTML = '';
@@ -129,8 +165,29 @@ function updateUsedWordsDisplay() {
 
 // 处理输入
 function handleInput(e) {
-    const input = e.target.value;
+    const input = e.target.value.trim();
     updateSuggestions(input);
+    
+    // 验证输入并更新提交按钮状态
+    if (input) {
+        const lastChar = currentWord.charAt(currentWord.length - 1);
+        const isValidStart = input.charAt(0) === lastChar;
+        const words = gameData[currentDifficulty].words;
+        const wordExists = words.some(w => w.word === input);
+        const notUsed = !usedWords.has(input);
+        
+        // 启用或禁用提交按钮
+        if (isValidStart && wordExists && notUsed) {
+            submitButton.removeAttribute('disabled');
+            submitButton.classList.remove('disabled');
+        } else {
+            submitButton.setAttribute('disabled', 'true');
+            submitButton.classList.add('disabled');
+        }
+    } else {
+        submitButton.setAttribute('disabled', 'true');
+        submitButton.classList.add('disabled');
+    }
 }
 
 // 更新建议词
@@ -166,57 +223,129 @@ function updateSuggestions(input) {
 
 // 提交词语
 function submitWord() {
-    const word = wordInput.value.trim();
-    
-    if (!word) {
-        showMessage('请输入词语');
-        return;
-    }
+    const input = wordInput.value.trim();
+    if (!input) return;
 
-    if (usedWords.has(word)) {
-        showMessage('这个词已经用过了');
+    const lastChar = currentWord.charAt(currentWord.length - 1);
+    if (input.charAt(0) !== lastChar) {
+        showMessage('第一个字必须是上一个词的最后一个字！', 'error');
         playSound('wrong');
         return;
     }
 
-    const words = gameData[currentDifficulty].words;
-    const wordExists = words.some(w => w.word === word);
-    
-    if (!wordExists) {
-        showMessage('这个词不在词库中');
+    const wordObj = gameData[currentDifficulty].words.find(w => w.word === input);
+    if (!wordObj) {
+        showMessage('这个词不在词库中！', 'error');
         playSound('wrong');
         return;
     }
 
-    if (!checkWordChain(currentWord, word)) {
-        showMessage('接龙不符合规则');
+    if (usedWords.has(input)) {
+        showMessage('这个词已经用过了！', 'error');
         playSound('wrong');
         return;
     }
 
     // 成功提交
-    playSound('correct');
-    usedWords.add(word);
-    currentWord = word;
+    usedWords.add(input);
+    currentWord = input;
     score += 10;
-    wordInput.value = '';
-    
+    updateUI();
     updateWordChain();
     updateLastChar();
     updateUsedWordsDisplay();
-    updateUI();
+    wordInput.value = '';
+    
+    // 显示成功提示
+    showSuccessModal(wordObj);
 
-    // 检查是否可以进入下一关
-    if (score >= level * 50) {
-        showSuccess();
+    // 检查是否完成关卡
+    if (usedWords.size >= 5) {
+        clearInterval(timer);
+        showLevelComplete();
     }
+}
+
+// 显示成功提交弹窗
+function showSuccessModal(wordData) {
+    const message = `
+        <div class="success-content">
+            <div class="word-info">
+                <h3>${wordData.word}</h3>
+                <p class="pinyin">${wordData.pinyin}</p>
+                <p class="meaning">${wordData.meaning || wordData.explanation}</p>
+                <p class="example">例句：${wordData.examples[0]}</p>
+            </div>
+            <div class="stats">
+                <p>当前分数：${score}</p>
+                <p>已用词语：${usedWords.size}</p>
+                <p>剩余时间：${timeLeft}秒</p>
+            </div>
+        </div>
+    `;
+    showMessage(message, '真棒！接龙成功！', 'success');
+}
+
+// 显示关卡完成弹窗
+function showLevelComplete() {
+    const message = `
+        <div class="level-complete-content">
+            <h3>🎉 恭喜完成第${level}关！</h3>
+            <div class="level-stats">
+                <p>获得分数：${score}</p>
+                <p>完成词语：${usedWords.size}个</p>
+                <p>剩余时间：${timeLeft}秒</p>
+                <p>额外时间奖励：+${timeLeft}分</p>
+            </div>
+            <div class="bonus-info">
+                <p>时间奖励已添加到总分！</p>
+                <button class="next-level-btn" onclick="nextLevel()">进入下一关</button>
+            </div>
+        </div>
+    `;
+    score += timeLeft; // 添加时间奖励分数
+    showMessage(message, '关卡完成！', 'success');
+}
+
+// 检查词语接龙规则
+function checkWordChain(prevWord, newWord) {
+    const lastChar = prevWord.charAt(prevWord.length - 1);
+    return newWord.charAt(0) === lastChar;
 }
 
 // 显示提示
 function showHint() {
-    const hint = getHint(currentWord, currentDifficulty);
-    showMessage(hint, '提示');
-    playSound('hint');
+    const lastChar = currentWord.charAt(currentWord.length - 1);
+    const availableWords = gameData[currentDifficulty].words.filter(wordObj => {
+        const word = wordObj.word;
+        return word.charAt(0) === lastChar && !usedWords.has(word);
+    });
+
+    if (availableWords.length > 0) {
+        const hintWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+        showMessage(`
+            提示词语：${hintWord.word}<br>
+            拼音：${hintWord.pinyin || '暂无'}<br>
+            释义：${hintWord.meaning || '暂无'}
+            ${hintWord.example ? `<br>例句：${hintWord.example}` : ''}
+        `, 'hint');
+        playSound('hint');
+    } else {
+        showMessage('没有可用的提示词了！', 'warning');
+    }
+}
+
+// 显示消息
+function showMessage(message, type = 'info') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.classList.add('fade-out');
+        setTimeout(() => messageDiv.remove(), 500);
+    }, 3000);
 }
 
 // 跳过当前词
@@ -258,21 +387,6 @@ function nextLevel() {
     startLevel();
 }
 
-// 开始计时器
-function startTimer() {
-    if (timer) clearInterval(timer);
-    
-    timer = setInterval(() => {
-        timeLeft--;
-        timeLeftDisplay.textContent = timeLeft;
-        
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            showTimeUp();
-        }
-    }, 1000);
-}
-
 // 显示时间到
 function showTimeUp() {
     modalTitle.textContent = '时间到！';
@@ -295,14 +409,6 @@ function showSuccess() {
     nextLevelButton.disabled = false;
 }
 
-// 显示消息
-function showMessage(message, title = '提示') {
-    modalTitle.textContent = title;
-    modalMessage.textContent = message;
-    wordExplanation.textContent = '';
-    modal.style.display = 'flex';
-}
-
 // 切换难度
 function handleDifficultyChange(e) {
     currentDifficulty = e.target.value;
@@ -321,6 +427,46 @@ function toggleSound() {
 function updateUI() {
     scoreDisplay.textContent = score;
     levelDisplay.textContent = level;
+}
+
+// 获取提示
+function getHint(currentWord, difficulty) {
+    const lastChar = currentWord.charAt(currentWord.length - 1);
+    const words = gameData[difficulty].words;
+    const availableWords = words.filter(item => 
+        item.word.charAt(0) === lastChar && 
+        !usedWords.has(item.word)
+    );
+
+    if (availableWords.length === 0) {
+        return '小朋友，这个字已经没有更多可以接的词语了，让我们跳过它试试别的吧！';
+    }
+    
+    const randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+    let hintText = `提示：\n`;
+    hintText += `1. 这个词语是"${randomWord.word}"（${randomWord.pinyin}）\n`;
+    hintText += `2. 它的意思是：${randomWord.meaning || randomWord.explanation}\n`;
+    hintText += `3. 例句：${randomWord.examples[0]}\n`;
+    
+    // 根据难度给出不同的额外提示
+    switch(difficulty) {
+        case 'easy':
+            hintText += `4. 这是一个${randomWord.word.length}个字的常用词语\n`;
+            hintText += `5. 相关词语：${randomWord.relatedWords.join('、')}\n`;
+            break;
+        case 'medium':
+            hintText += `4. 这是一个成语，经常用来${randomWord.meaning}\n`;
+            hintText += `5. 你可以这样用：${randomWord.examples.join('、')}\n`;
+            break;
+        case 'hard':
+            hintText += `4. 这是一句优美的诗词短语\n`;
+            hintText += `5. 这句诗描写了${randomWord.meaning}\n`;
+            break;
+    }
+    
+    hintText += `\n小贴士：记住词语的第一个字是"${randomWord.word.charAt(0)}"，它和"${lastChar}"字正好可以接上哦！`;
+    
+    return hintText;
 }
 
 // 初始化游戏
