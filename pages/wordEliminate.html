@@ -2,7 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="词语消消乐 - 一个有趣的汉字学习游戏，帮助孩子认识和掌握更多汉字词语。">
+    <meta name="author" content="lickfeng">
     <title>词语消消乐 - 汉字游戏乐园</title>
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/wordEliminate.css">
@@ -66,7 +68,16 @@
                 <button id="closeModal">关闭</button>
             </div>
         </div>
+
+        <div class="message-container" id="messageContainer">
+            <!-- 消息将通过 JavaScript 动态生成 -->
+        </div>
     </div>
+
+    <footer class="footer">
+        <p> 2024 汉字游戏乐园 by lickfeng</p>
+        <p>交流讨论请添加微信：lick-feng</p>
+    </footer>
 
     <script src="../data/wordEliminate/questions.js"></script>
     <script src="../js/games/wordEliminate.js"></script>
