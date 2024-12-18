@@ -298,6 +298,167 @@ hanzi_game/
 - [ ] 移动端适配优化
 - [ ] 更多语音功能
 
+## 项目架构升级（v2.0.0）
+
+### 新增功能：英语互动游戏模块
+
+#### 项目结构
+```
+hanzi_game/
+├── index.html                 # 主页面（包含汉字和英语游戏入口）
+├── css/
+│   ├── common.css            # 公共样式
+│   ├── english/              # 英语游戏样式
+│   │   ├── wordBuilder.css
+│   │   ├── wordConnect.css
+│   │   ├── wordElimination.css
+│   │   ├── sentenceCompletion.css
+│   │   ├── wordChain.css
+│   │   ├── sentenceMaze.css
+│   │   └── synonymAntonym.css
+├── js/
+│   ├── common/              # 公共工具函数
+│   │   └── audioUtils.js    # 音频处理工具
+│   ├── english/            # 英语游戏逻辑
+│   │   ├── wordBuilder.js
+│   │   ├── wordConnect.js
+│   │   ├── wordElimination.js
+│   │   ├── sentenceCompletion.js
+│   │   ├── wordChain.js
+│   │   ├── sentenceMaze.js
+│   │   └── synonymAntonym.js
+├── pages/
+│   ├── english/           # 英语游戏页面
+│   │   ├── wordBuilder.html
+│   │   ├── wordConnect.html
+│   │   ├── wordElimination.html
+│   │   ├── sentenceCompletion.html
+│   │   ├── wordChain.html
+│   │   ├── sentenceMaze.html
+│   │   └── synonymAntonym.html
+├── assets/
+│   ├── audio/            # 音频资源
+│   │   └── english/     # 英语发音文件
+│   ├── images/          # 图片资源
+│   │   └── english/     # 英语游戏相关图片
+│   └── data/            # 游戏数据
+│       └── english/     # 英语游戏数据文件
+```
+
+#### 开发计划
+
+1. **分支管理策略**
+   - `feature/english-games`: 主功能分支
+   - `feature/word-builder`: Word Builder游戏开发
+   - `feature/word-connect`: Word Connect游戏开发
+   - 其他游戏分支依次类推
+
+2. **开发优先级和时间线**
+   - Phase 1: 主页面改版 (feature/english-games)
+   - Phase 2: Word Builder游戏 (feature/word-builder)
+   - Phase 3: Word Connect游戏 (feature/word-connect)
+   - 后续游戏按序开发
+
+3. **技术栈升级**
+   - 引入Web Speech API实现语音播放
+   - 使用LocalStorage存储游戏进度
+   - 响应式设计适配各种设备
+
+#### 版本规划
+
+##### v2.0.0 (当前开发版本)
+- 主页面改版，增加英语游戏入口
+- 完善项目文档
+- 优化公共组件
+
+##### v2.1.0
+- Word Builder游戏完整功能
+- 单词音频资源整合
+- 数据存储优化
+
+##### v2.2.0
+- Word Connect游戏完整功能
+- 游戏进度保存功能
+- 性能优化
+
+#### 游戏功能详细设计
+
+1. **Word Builder（单词拼搭）**
+   - 难度分级：初级/进阶/高级
+   - 音频反馈系统
+   - 进度保存功能
+   - 词汇数据库设计
+
+2. **Word Connect（文字连线）**
+   - 连线判定系统
+   - 实时反馈机制
+   - 关卡进度系统
+   - 词义配对数据结构
+
+[后续游戏设计细节将在各自分支开发时补充]
+
+#### 通用功能模块
+
+1. **音频系统**
+   ```javascript
+   // audioUtils.js
+   class AudioManager {
+     playWord(word)
+     playFeedback(type) // success/error
+     preloadAudio(wordList)
+   }
+   ```
+
+2. **进度管理**
+   ```javascript
+   // progressManager.js
+   class ProgressManager {
+     saveProgress(gameId, level, score)
+     loadProgress(gameId)
+     updateAchievements(gameId, achievement)
+   }
+   ```
+
+3. **数据管理**
+   ```javascript
+   // dataManager.js
+   class DataManager {
+     loadGameData(gameId, level)
+     saveUserData(userData)
+     syncWithServer() // 未来扩展
+   }
+   ```
+
+#### 开发规范
+
+1. **代码规范**
+   - 使用ES6+语法
+   - 遵循BEM命名规范
+   - JSDoc注释规范
+
+2. **Git提交规范**
+   - feat: 新功能
+   - fix: 修复bug
+   - docs: 文档更新
+   - style: 代码格式
+   - refactor: 重构
+   - test: 测试用例
+   - chore: 构建过程或辅助工具的变动
+
+#### 测试计划
+
+1. **单元测试**
+   - 游戏核心逻辑
+   - 数据处理函数
+
+2. **集成测试**
+   - 游戏流程测试
+   - 跨浏览器兼容性
+
+3. **性能测试**
+   - 加载时间优化
+   - 内存使用监控
+
 ## 贡献指南
 
 1. Fork 项目
