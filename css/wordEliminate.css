@@ -345,3 +345,98 @@ select, #soundToggle {
         width: 100%;
     }
 }
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 10px;
+        margin-bottom: 60px; /* 为底部footer留出空间 */
+    }
+
+    .character-block {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        margin: 5px;
+    }
+
+    .game-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .target-word-container {
+        font-size: 18px;
+    }
+
+    .selection-display {
+        font-size: 16px;
+    }
+
+    /* 优化按钮大小，方便触摸 */
+    button {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 10px;
+    }
+
+    /* 优化下拉菜单 */
+    select {
+        height: 44px;
+        font-size: 16px;
+        padding: 5px 10px;
+    }
+}
+
+/* 触摸设备拖拽优化 */
+.character-block.dragging {
+    opacity: 0.7;
+    transform: scale(1.1);
+    z-index: 1000;
+    transition: transform 0.1s ease-out;
+}
+
+/* 禁用文本选择 */
+.character-block {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+/* 优化触摸反馈 */
+.character-block:active {
+    transform: scale(0.95);
+}
+
+/* 添加触摸涟漪效果 */
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.character-block::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.character-block:active::after {
+    animation: ripple 0.4s ease-out;
+}

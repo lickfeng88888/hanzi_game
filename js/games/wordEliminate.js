@@ -108,16 +108,9 @@ function createCharacterGrid() {
 
     // 创建方块
     allChars.forEach((char, index) => {
-        const block = document.createElement('div');
-        block.className = 'character-block';
-        block.textContent = char;
-        block.dataset.char = char;
+        const block = createCharacterBlock(char);
         block.dataset.index = index;
-        block.addEventListener('click', handleBlockClick);
-        
-        // 添加延迟出现的动画
         block.style.animationDelay = `${index * 0.1}s`;
-        
         characterGrid.appendChild(block);
     });
 }
@@ -157,6 +150,73 @@ function handleBlockClick(e) {
     
     // 更新显示
     updateSelectedDisplay();
+}
+
+// 添加触摸事件支持
+function addTouchSupport(element) {
+    let isDragging = false;
+    let startX, startY;
+    
+    element.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        const touch = e.touches[0];
+        startX = touch.clientX - element.offsetLeft;
+        startY = touch.clientY - element.offsetTop;
+        
+        // 防止页面滚动
+        e.preventDefault();
+        
+        // 添加选中效果
+        this.classList.add('dragging');
+        handleBlockClick({ target: this });
+    }, { passive: false });
+    
+    element.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        
+        const touch = e.touches[0];
+        const newX = touch.clientX - startX;
+        const newY = touch.clientY - startY;
+        
+        // 防止页面滚动
+        e.preventDefault();
+        
+        // 检测是否移动到其他字符上
+        const elementsAtPoint = document.elementsFromPoint(touch.clientX, touch.clientY);
+        const targetChar = elementsAtPoint.find(el => el.classList.contains('character-block') && el !== this);
+        
+        if (targetChar) {
+            handleBlockClick({ target: targetChar });
+        }
+    }, { passive: false });
+    
+    element.addEventListener('touchend', function(e) {
+        isDragging = false;
+        this.classList.remove('dragging');
+        e.preventDefault();
+    }, { passive: false });
+    
+    element.addEventListener('touchcancel', function(e) {
+        isDragging = false;
+        this.classList.remove('dragging');
+        e.preventDefault();
+    }, { passive: false });
+}
+
+// 创建字符方块
+function createCharacterBlock(char) {
+    const block = document.createElement('div');
+    block.className = 'character-block';
+    block.textContent = char;
+    block.dataset.char = char;
+    
+    // 添加触摸支持
+    addTouchSupport(block);
+    
+    // 添加鼠标事件
+    block.addEventListener('click', handleBlockClick);
+    
+    return block;
 }
 
 // 更新已选择的显示
