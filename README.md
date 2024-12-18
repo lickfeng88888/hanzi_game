@@ -1,18 +1,19 @@
-# 汉字游戏乐园 (Chinese Characters Game Paradise)
+# 汉字游戏乐园 (Chinese Characters & English Learning Game Paradise)
 
-一个专门为儿童设计的汉字学习互动游戏平台，包含多种有趣的游戏模式，帮助孩子们快乐地学习汉字。
+一个专门为儿童设计的汉字和英语学习互动游戏平台，包含多种有趣的游戏模式，帮助孩子们快乐地学习汉字和英语。
 
 ## 项目特点
 
-- 🎮 五种趣味游戏模式，循序渐进的学习体验
-- 🎯 适合5-10岁儿童的认知水平和学习需求
+- 🎮 十种趣味游戏模式（五种汉字游戏 + 五种英语游戏），循序渐进的学习体验
+- 🎯 适合7-12岁儿童的认知水平和学习需求
 - 📱 响应式设计，完美支持PC和平板设备
 - 🔊 丰富的音效反馈，提升游戏体验
 - 💾 本地题库存储，无需联网即可使用
 - ⭐ 完整的游戏进度和分数记录系统
 - 🎨 精美的界面设计和流畅的动画效果
+- 🌏 中英文双语学习环境
 
-## 游戏模式
+## 汉字游戏模式
 
 1. **词语拖拽拼搭**
    - 通过拖拽方式组合汉字形成词语
@@ -49,6 +50,43 @@
    - 计时挑战模式
    - 详细的词语解释和用法说明
 
+## 英语游戏模式
+
+1. **单词构建 (Word Builder)**
+   - 通过拼搭字母片段学习单词构建
+   - 多个主题关卡：动物、食物、职业等
+   - 每个单词配有图片提示和发音
+   - 智能提示系统
+   - 详细的单词释义和例句
+
+2. **单词连线 (Word Connect)**
+   - 连线匹配英语单词与中文释义
+   - 多个难度等级和主题
+   - 实时视觉反馈
+   - 进度保存功能
+   - 丰富的词汇分类
+
+3. **单词消除 (Word Elimination)**
+   - 识别并消除正确的英语单词
+   - 难度递进：基础词汇到复杂短语
+   - 计时挑战模式
+   - 连击奖励系统
+   - 主题式词汇学习
+
+4. **单词接龙 (Word Chain)**
+   - 创新的英语单词接龙玩法
+   - 多个主题关卡：动物、科技、学术等
+   - 实时单词提示
+   - 计时挑战模式
+   - 详细的单词解释和用法说明
+
+5. **同义词反义词 (Word Match)**
+   - 匹配英语同义词和反义词
+   - 多个难度等级
+   - 丰富的词汇搭配
+   - 例句展示
+   - 词汇扩展学习
+
 ## 技术实现
 
 ### 前端架构
@@ -64,7 +102,9 @@
   - 响应式设计
   - CSS 动画和过渡效果
   - 自定义字体和图标
+  - Emoji 图标集成
   - 主题切换支持
+  - 移动端适配优化
 
 - **JavaScript**
   - 原生 JS，无框架依赖
@@ -72,6 +112,30 @@
   - 事件委托优化
   - 防抖和节流处理
   - 异步加载资源
+  - 本地存储管理
+
+### UI组件
+- **游戏卡片**
+  - 统一的卡片设计
+  - 表情符号图标集成
+  - 悬停动画效果
+  - 响应式布局适配
+
+- **导航组件**
+  - 返回主页按钮
+  - 关卡进度指示
+  - 得分显示面板
+
+- **页面布局**
+  - 网格系统布局
+  - 弹性盒子布局
+  - 移动端优先设计
+
+- **交互反馈**
+  - 动画过渡效果
+  - 操作提示信息
+  - 错误反馈机制
+  - 加载状态指示
 
 ### 游戏引擎
 - 自定义的游戏状态管理
@@ -84,39 +148,68 @@
 
 ```
 hanzi_game/
-├── index.html                 # 主页面
-├── css/                       # 样式文件
-│   ├── style.css             # 主样式
-│   ├── common.css            # 公共样式
-│   ├── dragWord.css          # 拖拽游戏样式
-│   ├── connectLine.css       # 连线游戏样式
-│   ├── wordEliminate.css     # 消消乐样式
-│   ├── pinyinDrag.css        # 拼音游戏样式
-│   └── wordChain.css         # 接龙游戏样式
-├── js/                       # JavaScript文件
-│   ├── main.js              # 主逻辑
-│   └── games/               # 游戏逻辑
-│       ├── dragWord.js      # 拖拽游戏逻辑
-│       ├── connectLine.js   # 连线游戏逻辑
-│       ├── wordEliminate.js # 消消乐逻辑
-│       ├── pinyinDrag.js    # 拼音游戏逻辑
-│       └── wordChain.js     # 接龙游戏逻辑
-├── pages/                   # 游戏页面
-│   ├── dragWord.html       # 拖拽游戏页面
-│   ├── connectLine.html    # 连线游戏页面
-│   ├── wordEliminate.html  # 消消乐页面
-│   ├── pinyinDrag.html     # 拼音游戏页面
-│   └── wordChain.html      # 接龙游戏页面
+├── assets/                   # 静态资源文件
+│   └── images/              # 图片资源
+├── css/                     # 样式文件
+│   ├── style.css           # 主样式
+│   ├── common/             # 通用样式组件
+│   │   ├── footer.css
+│   │   └── modal.css
+│   ├── chinese/            # 汉字游戏样式
+│   │   ├── dragWord.css
+│   │   ├── connectLine.css
+│   │   ├── wordEliminate.css
+│   │   ├── pinyinDrag.css
+│   │   └── wordChain.css
+│   └── english/            # 英语游戏样式
+│       ├── wordBuilder.css
+│       ├── wordConnect.css
+│       ├── wordElimination.css
+│       ├── wordChain.css
+│       └── wordMatch.css
 ├── data/                    # 游戏数据
-│   ├── dragWord/           # 拖拽游戏题库
-│   ├── connectLine/        # 连线游戏题库
-│   ├── wordEliminate/      # 消消乐题库
-│   ├── pinyinDrag/         # 拼音题库
-│   └── wordChain/          # 接龙题库
-└── assets/                 # 静态资源
-    ├── images/            # 图片资源
-    ├── audio/            # 音效资源
-    └── fonts/           # 字体文件
+│   ├── chinese/            # 汉字游戏数据
+│   │   ├── words.json
+│   │   └── pinyin.json
+│   └── english/            # 英语游戏数据
+│       ├── wordBuilder.json
+│       ├── wordConnect.json
+│       ├── wordElimination.json
+│       ├── wordChain.json
+│       └── wordMatch.json
+├── js/                     # JavaScript文件
+│   ├── common/            # 通用功能模块
+│   │   ├── audio.js
+│   │   ├── progress.js
+│   │   └── utils.js
+│   ├── chinese/           # 汉字游戏逻辑
+│   │   ├── dragWord.js
+│   │   ├── connectLine.js
+│   │   ├── wordEliminate.js
+│   │   ├── pinyinDrag.js
+│   │   └── wordChain.js
+│   └── english/           # 英语游戏逻辑
+│       ├── wordBuilder.js
+│       ├── wordConnect.js
+│       ├── wordElimination.js
+│       ├── wordChain.js
+│       └── wordMatch.js
+├── pages/                  # 页面文件
+│   ├── chinese/           # 汉字游戏页面
+│   │   ├── dragWord.html
+│   │   ├── connectLine.html
+│   │   ├── wordEliminate.html
+│   │   ├── pinyinDrag.html
+│   │   └── wordChain.html
+│   └── english/           # 英语游戏页面
+│       ├── wordBuilder.html
+│       ├── wordConnect.html
+│       ├── wordElimination.html
+│       ├── wordChain.html
+│       └── wordMatch.html
+├── index.html             # 主页
+└── README.md              # 项目说明文档
+```
 
 ## 运行说明
 
@@ -190,6 +283,26 @@ hanzi_game/
    - 初级：常用双字词，适合基础学习
    - 中级：四字成语，提升文化内涵
    - 高级：诗词名句，体验古典之美
+
+### 单词构建游戏 (Word Builder)
+1. 从右侧字母库中点击字母
+2. 放置到左侧空格中组成单词
+3. 点击提交按钮检查答案
+4. 正确后自动进入下一题
+
+### 单词连连看 (Word Connect)
+1. 点击左侧字母开始连线
+2. 拖动到右侧相匹配的选项
+3. 连线正确显示绿色，错误显示红色
+4. 全部匹配完成后进入下一关
+
+### 同义词/反义词配对 (Synonym-Antonym Match)
+1. 匹配单词的同义词或反义词
+2. 三个难度等级：初级（简单词汇）、中级（常用词汇）、高级（复杂词汇）
+3. 实时反馈：正确匹配显示绿色，错误匹配显示红色
+4. 提示系统：显示单词的中文释义和使用场景
+5. 关卡进度保存
+6. 计分系统：连续正确匹配可获得额外分数
 
 ## 更新日志
 
@@ -277,6 +390,33 @@ hanzi_game/
   - 高级难度：从5个词扩充到15个四字成语
 - 新增词语包含更多日常生活、自然现象、学习相关的词汇
 - 确保所有新增词语都配有拼音、释义和示例
+
+### 2024-12-18 新增英语游戏功能
+#### 新增功能
+1. **单词构建游戏**
+   - 实现字母点击组合机制
+   - 添加单词验证和提示系统
+   - 集成单词释义和例句展示
+   - 优化游戏UI和交互体验
+
+2. **单词连线**
+   - 开发字母网格连线系统
+   - 实现智能字母布局算法
+   - 添加单词提示和验证功能
+   - 优化触摸和鼠标交互
+   - 完善关卡进度管理
+
+#### 技术改进
+- 重构游戏状态管理系统
+- 优化字母布局算法
+- 改进触摸事件处理
+- 增强游戏反馈机制
+
+#### 界面优化
+- 统一游戏界面风格
+- 优化移动端适配
+- 改进游戏提示显示
+- 美化动画效果
 
 ## 开发计划
 
@@ -487,3 +627,27 @@ hanzi_game/
 - 作者：lickfeng
 - 微信：lick-feng
 - 2024 汉字游戏乐园
+
+## 最近更新
+
+### v2.2.1 (2024-12-18)
+- UI改进：
+  - 替换英语游戏入口的图片为表情符号图标
+    * Word Builder: 🏗️ (建筑工地)
+    * Word Connect: 🔗 (链接)
+    * Word Elimination: 💫 (星星)
+    * Word Chain: ⛓️ (链条)
+    * Synonym-Antonym Match: 🔄 (循环箭头)
+  - 优化游戏卡片样式和动画效果
+  - 改进响应式设计，提升移动端体验
+- 功能修复：
+  - 修复同义词/反义词游戏入口链接
+  - 统一所有游戏页面的返回按钮和页脚样式
+  - 删除未完成的游戏入口（句子迷宫和拖拽句子）
+- 文档更新：
+  - 更新游戏功能说明
+  - 完善安装和使用说明
+  - 添加最新版本更新日志
+
+### v2.2.0 (2024-01-18)
+{{ ... }}
