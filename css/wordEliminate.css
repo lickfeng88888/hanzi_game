@@ -59,6 +59,7 @@
     margin: 60px auto 20px;  
     padding: 20px;
     font-family: 'Microsoft YaHei', sans-serif;
+    padding-bottom: 40px; /* 为底部文案留出空间 */
 }
 
 /* 游戏信息栏 */
@@ -168,6 +169,7 @@
     justify-content: center;
     gap: 10px;
     margin: 20px 0;
+    margin-bottom: 30px; /* 确保按钮不会被底部文案遮挡 */
 }
 
 button {
