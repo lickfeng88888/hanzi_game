@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词消消乐 - 英语游戏</title>
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/common/footer.css">
+    <link rel="stylesheet" href="../../css/english/wordElimination.css">
+</head>
+<body>
+    <div class="back-button">
+        <button onclick="window.location.href='../../index.html'">返回主页</button>
+    </div>
+    <main class="game-container">
+        <header>
+            <h1>单词消消乐</h1>
+            <p>找到并消除正确的单词！</p>
+        </header>
+        <div class="game-title">
+            <h1>单词消除游戏</h1>
+            <p>选择正确的单词完成句子！</p>
+        </div>
+
+        <div class="game-header">
+            <div class="score-container">得分: <span id="score">0</span></div>
+            <div class="level-container">关卡: <span id="level">1</span></div>
+        </div>
+
+        <div class="sentence-container">
+            <p id="sentence">The cat ___ on the mat.</p>
+        </div>
+
+        <div class="words-container" id="words-container">
+            <!-- 单词选项将通过JavaScript动态添加 -->
+        </div>
+
+        <div class="hint-container" id="hint-container" style="display: none;">
+            <!-- 提示信息将在这里显示 -->
+        </div>
+
+        <div class="game-controls">
+            <button class="game-button" id="hint-button">显示提示</button>
+            <button class="game-button" id="reset-button">重新开始</button>
+            <button class="game-button" id="rules-button">游戏规则</button>
+        </div>
+    </main>
+    <footer class="footer">
+        <p>2024 儿童互动游戏教学平台 - 让学习更有趣！</p>
+        <p>2024 儿童互动游戏乐园 by lickfeng</p>
+        <p>交流讨论请添加微信：lick-feng</p>
+    </footer>
+
+    <div class="modal" id="message-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-message"></p>
+            <button id="modal-button">继续</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const gameData = {
+            levels: [
+                {
+                    sentence: "The cat ___ on the mat.",
+                    words: ["sits", "running", "jump", "sleeping"],
+                    correctWord: "sits",
+                    hint: "选择一个描述猫咪当前动作的单词（现在时态）"
+                },
+                {
+                    sentence: "She ___ her homework yesterday.",
+                    words: ["do", "doing", "did", "done"],
+                    correctWord: "did",
+                    hint: "选择'do'的过去时态形式"
+                },
+                {
+                    sentence: "They ___ to school every morning.",
+                    words: ["walking", "walk", "walked", "walks"],
+                    correctWord: "walk",
+                    hint: "选择适合'they'的动词基本形式"
+                }
+                // 可以添加更多关卡
+            ]
+        };
+
+        // 游戏状态
+        let currentState = {
+            score: 0,
+            level: 0,
+            hintsUsed: 0
+        };
+
+        // DOM 元素
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const sentenceElement = document.getElementById('sentence');
+        const wordsContainer = document.getElementById('words-container');
+        const hintContainer = document.getElementById('hint-container');
+        const modal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalButton = document.getElementById('modal-button');
+        const closeModal = document.getElementById('close-modal');
+
+        // 按钮元素
+        const hintButton = document.getElementById('hint-button');
+        const resetButton = document.getElementById('reset-button');
+        const rulesButton = document.getElementById('rules-button');
+
+        // 初始化游戏
+        function initGame() {
+            currentState.score = 0;
+            currentState.level = 0;
+            currentState.hintsUsed = 0;
+            updateScore();
+            loadLevel();
+        }
+
+        // 加载关卡
+        function loadLevel() {
+            if (currentState.level >= gameData.levels.length) {
+                showModal('恭喜通关！', '你已完成所有关卡！', '再玩一次');
+                return;
+            }
+
+            const level = gameData.levels[currentState.level];
+            sentenceElement.textContent = level.sentence;
+            levelElement.textContent = currentState.level + 1;
+            
+            // 清空并填充单词容器
+            wordsContainer.innerHTML = '';
+            level.words.sort(() => Math.random() - 0.5).forEach(word => {
+                const wordBlock = document.createElement('div');
+                wordBlock.className = 'word-block';
+                wordBlock.textContent = word;
+                wordBlock.addEventListener('click', () => checkAnswer(word));
+                wordsContainer.appendChild(wordBlock);
+            });
+
+            hintContainer.style.display = 'none';
+        }
+
+        // 检查答案
+        function checkAnswer(selectedWord) {
+            const level = gameData.levels[currentState.level];
+            const wordBlocks = document.querySelectorAll('.word-block');
+            
+            if (selectedWord === level.correctWord) {
+                // 答对了
+                wordBlocks.forEach(block => {
+                    if (block.textContent === selectedWord) {
+                        block.classList.add('correct');
+                    }
+                });
+
+                currentState.score += 10;
+                updateScore();
+                
+                setTimeout(() => {
+                    currentState.level++;
+                    if (currentState.level < gameData.levels.length) {
+                        showModal('回答正确！', '太棒了！准备进入下一关。', '继续');
+                    }
+                    loadLevel();
+                }, 1000);
+            } else {
+                // 答错了
+                wordBlocks.forEach(block => {
+                    if (block.textContent === selectedWord) {
+                        block.classList.add('wrong');
+                        setTimeout(() => block.classList.remove('wrong'), 500);
+                    }
+                });
+            }
+        }
+
+        // 更新分数显示
+        function updateScore() {
+            scoreElement.textContent = currentState.score;
+        }
+
+        // 显示提示
+        function showHint() {
+            const level = gameData.levels[currentState.level];
+            hintContainer.textContent = level.hint;
+            hintContainer.style.display = 'block';
+            currentState.hintsUsed++;
+        }
+
+        // 显示模态框
+        function showModal(title, message, buttonText) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalButton.textContent = buttonText;
+            modal.style.display = 'flex';
+        }
+
+        // 事件监听器
+        hintButton.addEventListener('click', showHint);
+        resetButton.addEventListener('click', () => {
+            showModal('重新开始', '确定要重新开始游戏吗？', '确定');
+        });
+        rulesButton.addEventListener('click', () => {
+            showModal('游戏规则', 
+                '1. 观察上方显示的英文句子，句子中缺少一个单词\n' +
+                '2. 从下方的单词选项中选择正确的单词填空\n' +
+                '3. 每答对一题可得10分\n' +
+                '4. 如果需要帮助，可以点击"显示提示"按钮', 
+                '明白了');
+        });
+
+        modalButton.addEventListener('click', () => {
+            if (modalButton.textContent === '确定' || modalButton.textContent === '再玩一次') {
+                initGame();
+            }
+            modal.style.display = 'none';
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // 游戏启动
+        initGame();
+    </script>
+</body>
+</html>

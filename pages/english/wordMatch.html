@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>同义词反义词匹配 - 英语游戏</title>
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/common/footer.css">
+    <link rel="stylesheet" href="../../css/english/wordMatch.css">
+</head>
+<body>
+    <div class="back-button">
+        <button onclick="window.location.href='../../index.html'">返回主页</button>
+    </div>
+    <main class="game-container">
+        <header>
+            <h1>同义词/反义词配对游戏</h1>
+            <p>匹配单词的同义词或反义词！</p>
+        </header>
+        <div class="game-title">
+            <h1>同义词/反义词配对</h1>
+            <p>将左侧单词与右侧对应的同义词或反义词连接起来！</p>
+        </div>
+
+        <div class="game-header">
+            <div class="score-container">得分: <span id="score">0</span></div>
+            <div class="level-container">关卡: <span id="level">1</span></div>
+            <div class="mode-container">模式: <span id="mode">初级</span></div>
+        </div>
+
+        <div class="match-type" id="match-type">
+            <!-- 显示当前是同义词还是反义词匹配 -->
+        </div>
+
+        <div class="game-board">
+            <div class="word-column" id="left-column">
+                <!-- 左侧单词将在这里显示 -->
+            </div>
+            <div class="word-column" id="right-column">
+                <!-- 右侧单词将在这里显示 -->
+            </div>
+        </div>
+
+        <div class="hint-container" id="hint-container">
+            <!-- 提示信息将在这里显示 -->
+        </div>
+
+        <div class="game-controls">
+            <button class="game-button" id="hint-button">显示提示</button>
+            <button class="game-button" id="reset-button">重新开始</button>
+            <button class="game-button" id="rules-button">游戏规则</button>
+        </div>
+    </main>
+    <footer class="footer">
+        <p>2024 儿童互动游戏教学平台 - 让学习更有趣！</p>
+        <p>2024 儿童互动游戏乐园 by lickfeng</p>
+        <p>交流讨论请添加微信：lick-feng</p>
+    </footer>
+
+    <div class="modal" id="message-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-message"></p>
+            <button id="modal-button">继续</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const gameData = {
+            levels: [
+                {
+                    name: "初级 - 基础同义词",
+                    type: "synonyms",
+                    pairs: [
+                        {
+                            word1: {
+                                text: "SMALL",
+                                hint: "体积小的",
+                                definition: "小的，微小的",
+                                example: "This is a small box."
+                            },
+                            word2: {
+                                text: "TINY",
+                                hint: "非常小的",
+                                definition: "极小的，微小的",
+                                example: "Look at this tiny ant."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "HAPPY",
+                                hint: "心情好的",
+                                definition: "快乐的，高兴的",
+                                example: "She is happy with her gift."
+                            },
+                            word2: {
+                                text: "GLAD",
+                                hint: "感到愉快的",
+                                definition: "高兴的，欢喜的",
+                                example: "I am glad to see you."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "FAST",
+                                hint: "速度快的",
+                                definition: "快速的，迅速的",
+                                example: "The car is very fast."
+                            },
+                            word2: {
+                                text: "QUICK",
+                                hint: "动作迅速的",
+                                definition: "快的，迅速的",
+                                example: "She is quick at learning."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "SMART",
+                                hint: "头脑聪明的",
+                                definition: "聪明的，智慧的",
+                                example: "He is a smart student."
+                            },
+                            word2: {
+                                text: "CLEVER",
+                                hint: "有智慧的",
+                                definition: "聪明的，机智的",
+                                example: "That was a clever solution."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "BEGIN",
+                                hint: "开始做",
+                                definition: "开始，启动",
+                                example: "Let's begin the game."
+                            },
+                            word2: {
+                                text: "START",
+                                hint: "开始进行",
+                                definition: "开始，启动",
+                                example: "The race will start soon."
+                            }
+                        }
+                    ]
+                },
+                {
+                    name: "初级 - 基础反义词",
+                    type: "antonyms",
+                    pairs: [
+                        {
+                            word1: {
+                                text: "HOT",
+                                hint: "温度高的",
+                                definition: "热的，烫的",
+                                example: "The soup is hot."
+                            },
+                            word2: {
+                                text: "COLD",
+                                hint: "温度低的",
+                                definition: "冷的，凉的",
+                                example: "It's cold outside."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "BIG",
+                                hint: "体积大的",
+                                definition: "大的，巨大的",
+                                example: "That's a big house."
+                            },
+                            word2: {
+                                text: "SMALL",
+                                hint: "体积小的",
+                                definition: "小的，微小的",
+                                example: "This is a small box."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "UP",
+                                hint: "向上的",
+                                definition: "上面的，向上的",
+                                example: "Look up at the sky."
+                            },
+                            word2: {
+                                text: "DOWN",
+                                hint: "向下的",
+                                definition: "下面的，向下的",
+                                example: "The ball fell down."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "OLD",
+                                hint: "年龄大的",
+                                definition: "老的，年老的",
+                                example: "My grandfather is old."
+                            },
+                            word2: {
+                                text: "YOUNG",
+                                hint: "年龄小的",
+                                definition: "年轻的，年幼的",
+                                example: "She is still young."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "FAST",
+                                hint: "速度快的",
+                                definition: "快速的，迅速的",
+                                example: "The car is fast."
+                            },
+                            word2: {
+                                text: "SLOW",
+                                hint: "速度慢的",
+                                definition: "慢的，缓慢的",
+                                example: "The turtle is slow."
+                            }
+                        }
+                    ]
+                },
+                {
+                    name: "中级 - 形容词同义词",
+                    type: "synonyms",
+                    pairs: [
+                        {
+                            word1: {
+                                text: "BEAUTIFUL",
+                                hint: "外表好看的",
+                                definition: "美丽的，漂亮的",
+                                example: "She is a beautiful girl."
+                            },
+                            word2: {
+                                text: "GORGEOUS",
+                                hint: "非常漂亮的",
+                                definition: "极其美丽的，华丽的",
+                                example: "The sunset was gorgeous."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "BRAVE",
+                                hint: "不害怕的",
+                                definition: "勇敢的，无畏的",
+                                example: "The brave soldier saved his friend."
+                            },
+                            word2: {
+                                text: "COURAGEOUS",
+                                hint: "有勇气的",
+                                definition: "勇敢的，有胆量的",
+                                example: "It was a courageous decision."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "DIFFICULT",
+                                hint: "不容易的",
+                                definition: "困难的，艰难的",
+                                example: "This is a difficult problem."
+                            },
+                            word2: {
+                                text: "HARD",
+                                hint: "费力的",
+                                definition: "困难的，艰苦的",
+                                example: "The test was very hard."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "FAMOUS",
+                                hint: "广为人知的",
+                                definition: "著名的，有名的",
+                                example: "He is a famous actor."
+                            },
+                            word2: {
+                                text: "POPULAR",
+                                hint: "受欢迎的",
+                                definition: "流行的，受欢迎的",
+                                example: "This song is very popular."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "TIRED",
+                                hint: "疲劳的",
+                                definition: "疲倦的，疲劳的",
+                                example: "I am tired after work."
+                            },
+                            word2: {
+                                text: "EXHAUSTED",
+                                hint: "精疲力尽的",
+                                definition: "筋疲力尽的，疲惫不堪的",
+                                example: "The runners were exhausted."
+                            }
+                        }
+                    ]
+                },
+                {
+                    name: "中级 - 形容词反义词",
+                    type: "antonyms",
+                    pairs: [
+                        {
+                            word1: {
+                                text: "RICH",
+                                hint: "有钱的",
+                                definition: "富有的，富裕的",
+                                example: "He is a rich businessman."
+                            },
+                            word2: {
+                                text: "POOR",
+                                hint: "贫穷的",
+                                definition: "贫穷的，贫困的",
+                                example: "The poor family needs help."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "STRONG",
+                                hint: "力量大的",
+                                definition: "强壮的，有力的",
+                                example: "He is very strong."
+                            },
+                            word2: {
+                                text: "WEAK",
+                                hint: "力量小的",
+                                definition: "虚弱的，无力的",
+                                example: "The patient feels weak."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "BRAVE",
+                                hint: "勇敢的",
+                                definition: "勇敢的，无畏的",
+                                example: "A brave soldier never runs."
+                            },
+                            word2: {
+                                text: "COWARD",
+                                hint: "胆小的",
+                                definition: "懦弱的，胆怯的",
+                                example: "Don't be a coward."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "POLITE",
+                                hint: "有礼貌的",
+                                definition: "有礼貌的，文明的",
+                                example: "She is always polite."
+                            },
+                            word2: {
+                                text: "RUDE",
+                                hint: "无礼的",
+                                definition: "粗鲁的，无礼的",
+                                example: "Don't be rude to others."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "GENEROUS",
+                                hint: "慷慨的",
+                                definition: "慷慨的，大方的",
+                                example: "He is generous with his money."
+                            },
+                            word2: {
+                                text: "STINGY",
+                                hint: "吝啬的",
+                                definition: "吝啬的，小气的",
+                                example: "Don't be stingy with food."
+                            }
+                        }
+                    ]
+                },
+                {
+                    name: "高级 - 动词短语同义词",
+                    type: "synonyms",
+                    pairs: [
+                        {
+                            word1: {
+                                text: "GIVE UP",
+                                hint: "放弃某事",
+                                definition: "放弃，停止尝试",
+                                example: "Never give up your dreams."
+                            },
+                            word2: {
+                                text: "ABANDON",
+                                hint: "完全放弃",
+                                definition: "放弃，抛弃",
+                                example: "Don't abandon hope."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "LOOK FOR",
+                                hint: "寻找某物",
+                                definition: "寻找，搜索",
+                                example: "I'm looking for my keys."
+                            },
+                            word2: {
+                                text: "SEARCH",
+                                hint: "搜寻某物",
+                                definition: "搜索，寻找",
+                                example: "Search for the answer."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "THINK ABOUT",
+                                hint: "考虑某事",
+                                definition: "思考，考虑",
+                                example: "Think about your future."
+                            },
+                            word2: {
+                                text: "CONSIDER",
+                                hint: "仔细思考",
+                                definition: "考虑，思考",
+                                example: "Consider all options."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "CARRY ON",
+                                hint: "继续进行",
+                                definition: "继续，持续",
+                                example: "Carry on with your work."
+                            },
+                            word2: {
+                                text: "CONTINUE",
+                                hint: "保持进行",
+                                definition: "继续，持续",
+                                example: "Continue your studies."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "PUT UP WITH",
+                                hint: "忍受某事",
+                                definition: "容忍，忍受",
+                                example: "I can't put up with the noise."
+                            },
+                            word2: {
+                                text: "TOLERATE",
+                                hint: "容忍某事",
+                                definition: "容忍，忍受",
+                                example: "Learn to tolerate differences."
+                            }
+                        }
+                    ]
+                },
+                {
+                    name: "高级 - 抽象概念反义词",
+                    type: "antonyms",
+                    pairs: [
+                        {
+                            word1: {
+                                text: "SUCCESS",
+                                hint: "成功的结果",
+                                definition: "成功，成就",
+                                example: "His business was a success."
+                            },
+                            word2: {
+                                text: "FAILURE",
+                                hint: "失败的结果",
+                                definition: "失败，失误",
+                                example: "Learn from your failures."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "VICTORY",
+                                hint: "获胜的结果",
+                                definition: "胜利，成功",
+                                example: "The team celebrated their victory."
+                            },
+                            word2: {
+                                text: "DEFEAT",
+                                hint: "失败的结果",
+                                definition: "失败，战败",
+                                example: "Accept defeat gracefully."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "REALITY",
+                                hint: "真实的事物",
+                                definition: "现实，实际",
+                                example: "Face the reality of life."
+                            },
+                            word2: {
+                                text: "FANTASY",
+                                hint: "想象的事物",
+                                definition: "幻想，想象",
+                                example: "Live in a fantasy world."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "WISDOM",
+                                hint: "智慧的品质",
+                                definition: "智慧，明智",
+                                example: "Age brings wisdom."
+                            },
+                            word2: {
+                                text: "FOOLISHNESS",
+                                hint: "愚蠢的品质",
+                                definition: "愚蠢，糊涂",
+                                example: "Avoid foolishness in decisions."
+                            }
+                        },
+                        {
+                            word1: {
+                                text: "HARMONY",
+                                hint: "和谐的状态",
+                                definition: "和谐，协调",
+                                example: "Live in harmony with nature."
+                            },
+                            word2: {
+                                text: "DISCORD",
+                                hint: "不和谐的状态",
+                                definition: "不和，纷争",
+                                example: "Avoid discord in the team."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // 游戏状态
+        let gameState = {
+            score: 0,
+            level: 0,
+            selectedCard: null,
+            matchedPairs: [],
+            currentPairs: []
+        };
+
+        // DOM 元素
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const modeElement = document.getElementById('mode');
+        const matchTypeElement = document.getElementById('match-type');
+        const leftColumn = document.getElementById('left-column');
+        const rightColumn = document.getElementById('right-column');
+        const hintContainer = document.getElementById('hint-container');
+        const modal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalButton = document.getElementById('modal-button');
+        const closeModal = document.getElementById('close-modal');
+
+        // 初始化游戏
+        function initGame() {
+            gameState = {
+                score: 0,
+                level: 0,
+                selectedCard: null,
+                matchedPairs: [],
+                currentPairs: []
+            };
+
+            loadLevel();
+            updateScore();
+        }
+
+        // 加载关卡
+        function loadLevel() {
+            const level = gameData.levels[gameState.level];
+            
+            gameState.currentPairs = level.pairs;
+            gameState.matchedPairs = [];
+            
+            // 显示匹配类型
+            matchTypeElement.textContent = level.type === 'synonyms' ? '找出同义词' : '找出反义词';
+
+            // 打乱单词顺序
+            const shuffledPairs = [...level.pairs];
+            const shuffledMatches = shuffleArray([...level.pairs]);
+
+            // 清空并填充左右列
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+
+            shuffledPairs.forEach(pair => {
+                createWordCard(pair.word1.text, 'left', pair);
+            });
+
+            shuffledMatches.forEach(pair => {
+                createWordCard(pair.word2.text, 'right', pair);
+            });
+        }
+
+        // 创建单词卡片
+        function createWordCard(word, column, pairData) {
+            const card = document.createElement('div');
+            card.className = 'word-card';
+            card.textContent = word;
+            card.addEventListener('click', () => handleCardClick(card, word, column, pairData));
+
+            if (column === 'left') {
+                leftColumn.appendChild(card);
+            } else {
+                rightColumn.appendChild(card);
+            }
+        }
+
+        // 处理卡片点击
+        function handleCardClick(card, word, column, pairData) {
+            if (card.classList.contains('matched')) {
+                return;
+            }
+
+            if (!gameState.selectedCard) {
+                // 第一次选择
+                gameState.selectedCard = {
+                    element: card,
+                    word: word,
+                    column: column,
+                    pairData: pairData
+                };
+                card.classList.add('selected');
+            } else if (gameState.selectedCard.column === column) {
+                // 点击同一列的其他卡片
+                gameState.selectedCard.element.classList.remove('selected');
+                gameState.selectedCard = {
+                    element: card,
+                    word: word,
+                    column: column,
+                    pairData: pairData
+                };
+                card.classList.add('selected');
+            } else {
+                // 尝试匹配
+                const match = checkMatch(gameState.selectedCard, {
+                    element: card,
+                    word: word,
+                    column: column,
+                    pairData: pairData
+                });
+
+                if (match) {
+                    handleCorrectMatch(gameState.selectedCard.element, card);
+                } else {
+                    handleWrongMatch(gameState.selectedCard.element, card);
+                }
+
+                gameState.selectedCard = null;
+            }
+        }
+
+        // 检查匹配
+        function checkMatch(first, second) {
+            return (first.column === 'left' && first.pairData === second.pairData) ||
+                   (first.column === 'right' && first.pairData === second.pairData);
+        }
+
+        // 处理正确匹配
+        function handleCorrectMatch(card1, card2) {
+            card1.classList.remove('selected');
+            card2.classList.remove('selected');
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            
+            gameState.score += 10;
+            gameState.matchedPairs.push(card1.textContent);
+
+            if (gameState.matchedPairs.length === gameState.currentPairs.length) {
+                // 完成当前关卡
+                setTimeout(() => {
+                    gameState.level++;
+                    if (gameState.level >= gameData.levels.length) {
+                        showModal('游戏通关！', '恭喜你完成了所有难度！', '重新开始');
+                        gameState.level = 0;
+                    } else {
+                        showModal('完成关卡！', '准备好迎接下一关了吗？', '继续');
+                    }
+                    loadLevel();
+                    updateScore();
+                }, 500);
+            }
+
+            updateScore();
+        }
+
+        // 处理错误匹配
+        function handleWrongMatch(card1, card2) {
+            card1.classList.add('wrong');
+            card2.classList.add('wrong');
+            
+            setTimeout(() => {
+                card1.classList.remove('selected', 'wrong');
+                card2.classList.remove('selected', 'wrong');
+            }, 500);
+        }
+
+        // 更新分数显示
+        function updateScore() {
+            scoreElement.textContent = gameState.score;
+            levelElement.textContent = gameState.level + 1;
+        }
+
+        // 显示提示
+        function showHint() {
+            const level = gameData.levels[gameState.level];
+            
+            // 显示当前未匹配的词对的提示
+            const unmatchedPairs = level.pairs.filter(pair => 
+                !gameState.matchedPairs.includes(pair.word1.text)
+            );
+
+            if (unmatchedPairs.length > 0) {
+                const randomPair = unmatchedPairs[Math.floor(Math.random() * unmatchedPairs.length)];
+                hintContainer.textContent = randomPair.word1.hint;
+                hintContainer.style.display = 'block';
+            }
+        }
+
+        // 显示模态框
+        function showModal(title, message, buttonText) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalButton.textContent = buttonText;
+            modal.style.display = 'flex';
+        }
+
+        // 随机打乱数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 事件监听
+        document.getElementById('hint-button').addEventListener('click', showHint);
+        document.getElementById('reset-button').addEventListener('click', () => {
+            showModal('重新开始', '确定要重新开始游戏吗？', '确定');
+        });
+        document.getElementById('rules-button').addEventListener('click', () => {
+            showModal('游戏规则', 
+                '1. 观察左右两列的单词\n' +
+                '2. 点击左列一个单词，再点击右列对应的同义词或反义词\n' +
+                '3. 匹配正确得10分\n' +
+                '4. 完成所有匹配后进入下一关\n' +
+                '5. 初级模式：简单常见词汇\n' +
+                '6. 进阶模式：较难词汇\n' +
+                '7. 高级模式：词组和短语', 
+                '明白了');
+        });
+
+        modalButton.addEventListener('click', () => {
+            if (modalButton.textContent === '确定' && modalTitle.textContent === '重新开始') {
+                initGame();
+            }
+            modal.style.display = 'none';
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // 启动游戏
+        initGame();
+    </script>
+</body>
+</html>

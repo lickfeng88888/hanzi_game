@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词连连看 - 英语游戏</title>
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/common/footer.css">
+    <link rel="stylesheet" href="../../css/english/wordConnect.css">
+    <script>
+        class WordConnect {
+            constructor() {
+                this.currentLevel = 1;
+                this.currentScore = 0;
+                this.currentWordIndex = 0;
+                this.foundWords = new Set();
+                this.selectedCells = [];
+                this.isSelecting = false;
+                this.lastSelectedCell = null;
+
+                // 游戏数据
+                this.gameData = {
+                    levels: [
+                        {
+                            name: "初级 - 动物世界",
+                            gridSize: 4,
+                            words: [
+                                {
+                                    word: "CAT",
+                                    hint: "一种常见的宠物，喜欢抓老鼠",
+                                    definition: "猫，一种小型哺乳动物",
+                                    example: "The cat is sleeping on the sofa."
+                                },
+                                {
+                                    word: "DOG",
+                                    hint: "人类最好的朋友",
+                                    definition: "狗，一种忠诚的宠物",
+                                    example: "He takes his dog for a walk every morning."
+                                },
+                                {
+                                    word: "RAT",
+                                    hint: "一种啮齿类动物",
+                                    definition: "老鼠，常见的啮齿动物",
+                                    example: "The rat ran into its hole."
+                                },
+                                {
+                                    word: "PIG",
+                                    hint: "农场里的粉红色动物",
+                                    definition: "猪，一种家畜",
+                                    example: "The pig is rolling in the mud."
+                                }
+                            ]
+                        },
+                        {
+                            name: "初级 - 水果乐园",
+                            gridSize: 4,
+                            words: [
+                                {
+                                    word: "KIWI",
+                                    hint: "一种棕色毛茸茸的水果",
+                                    definition: "猕猴桃，富含维生素C的水果",
+                                    example: "She likes to eat kiwi for breakfast."
+                                },
+                                {
+                                    word: "PEAR",
+                                    hint: "一种梨形的水果",
+                                    definition: "梨，一种常见的水果",
+                                    example: "The pear is sweet and juicy."
+                                },
+                                {
+                                    word: "PLUM",
+                                    hint: "一种紫色的水果",
+                                    definition: "李子，核果的一种",
+                                    example: "The plum is ripe and sweet."
+                                },
+                                {
+                                    word: "LIME",
+                                    hint: "一种绿色的柑橘类水果",
+                                    definition: "青柠，一种酸味水果",
+                                    example: "Add some lime to your drink."
+                                }
+                            ]
+                        },
+                        {
+                            name: "中级 - 学校生活",
+                            gridSize: 5,
+                            words: [
+                                {
+                                    word: "PAPER",
+                                    hint: "用来写字的白色物品",
+                                    definition: "纸，书写用品",
+                                    example: "I need some paper to write on."
+                                },
+                                {
+                                    word: "RULER",
+                                    hint: "用来测量长度的工具",
+                                    definition: "尺子，测量工具",
+                                    example: "Use a ruler to draw straight lines."
+                                },
+                                {
+                                    word: "CHALK",
+                                    hint: "在黑板上写字的工具",
+                                    definition: "粉笔，书写工具",
+                                    example: "The teacher writes with chalk."
+                                },
+                                {
+                                    word: "BOARD",
+                                    hint: "教室前面的黑色书写板",
+                                    definition: "黑板，教学用具",
+                                    example: "The board is full of notes."
+                                },
+                                {
+                                    word: "DIARY",
+                                    hint: "记录每天生活的本子",
+                                    definition: "日记本，记录生活的本子",
+                                    example: "She writes in her diary every night."
+                                }
+                            ]
+                        },
+                        {
+                            name: "中级 - 天气气候",
+                            gridSize: 5,
+                            words: [
+                                {
+                                    word: "CLOUD",
+                                    hint: "天空中的白色物体",
+                                    definition: "云，天空中的水汽凝结体",
+                                    example: "The clouds look like cotton."
+                                },
+                                {
+                                    word: "STORM",
+                                    hint: "强风加大雨的天气",
+                                    definition: "暴风雨，恶劣天气",
+                                    example: "A storm is coming."
+                                },
+                                {
+                                    word: "SUNNY",
+                                    hint: "阳光明媚的天气",
+                                    definition: "晴朗的，阳光充足的",
+                                    example: "It's a sunny day today."
+                                },
+                                {
+                                    word: "WINDY",
+                                    hint: "风很大的天气",
+                                    definition: "有风的，刮风的",
+                                    example: "It's too windy to fly a kite."
+                                },
+                                {
+                                    word: "FROST",
+                                    hint: "寒冷天气形成的白霜",
+                                    definition: "霜，结冰现象",
+                                    example: "There was frost on the grass."
+                                }
+                            ]
+                        },
+                        {
+                            name: "高级 - 运动项目",
+                            gridSize: 6,
+                            words: [
+                                {
+                                    word: "TENNIS",
+                                    hint: "用拍子打球的运动",
+                                    definition: "网球，一种球拍运动",
+                                    example: "They play tennis every weekend."
+                                },
+                                {
+                                    word: "SOCCER",
+                                    hint: "用脚踢球的运动",
+                                    definition: "足球，一种团队运动",
+                                    example: "Soccer is popular worldwide."
+                                },
+                                {
+                                    word: "BOXING",
+                                    hint: "戴着手套比赛的运动",
+                                    definition: "拳击，一种格斗运动",
+                                    example: "He trains boxing every morning."
+                                },
+                                {
+                                    word: "HOCKEY",
+                                    hint: "在冰上打球的运动",
+                                    definition: "冰球，一种冰上运动",
+                                    example: "Hockey is Canada's favorite sport."
+                                },
+                                {
+                                    word: "DIVING",
+                                    hint: "跳入水中的运动",
+                                    definition: "跳水，一种水上运动",
+                                    example: "She won a medal in diving."
+                                },
+                                {
+                                    word: "SKIING",
+                                    hint: "在雪地滑行的运动",
+                                    definition: "滑雪，一种冬季运动",
+                                    example: "Let's go skiing this winter."
+                                }
+                            ]
+                        },
+                        {
+                            name: "高级 - 职业工作",
+                            gridSize: 6,
+                            words: [
+                                {
+                                    word: "LAWYER",
+                                    hint: "在法庭上工作的人",
+                                    definition: "律师，法律从业者",
+                                    example: "The lawyer won the case."
+                                },
+                                {
+                                    word: "BANKER",
+                                    hint: "在银行工作的人",
+                                    definition: "银行家，银行工作者",
+                                    example: "The banker counted the money."
+                                },
+                                {
+                                    word: "ARTIST",
+                                    hint: "创作艺术品的人",
+                                    definition: "艺术家，艺术创作者",
+                                    example: "The artist painted a picture."
+                                },
+                                {
+                                    word: "SINGER",
+                                    hint: "唱歌的表演者",
+                                    definition: "歌手，演唱艺术家",
+                                    example: "The singer has a beautiful voice."
+                                },
+                                {
+                                    word: "WRITER",
+                                    hint: "写作的创作者",
+                                    definition: "作家，文字创作者",
+                                    example: "The writer published a new book."
+                                },
+                                {
+                                    word: "CHEF",
+                                    hint: "在餐厅烹饪的人",
+                                    definition: "厨师，烹饪专家",
+                                    example: "The chef created a new dish."
+                                }
+                            ]
+                        }
+                    ],
+                    settings: {
+                        timeLimit: 180,           // 每关时间限制（秒）
+                        scorePerWord: 10,         // 每个正确单词的分数
+                        bonusTimeScore: 5,        // 剩余时间奖励分数（每10秒）
+                        hintPenalty: 2,          // 使用提示扣除的分数
+                        passingScore: {
+                            easy: 30,            // 初级关卡及格分数
+                            medium: 40,          // 中级关卡及格分数
+                            hard: 50             // 高级关卡及格分数
+                        }
+                    }
+                };
+
+                this.gridSize = 4; // 4x4网格
+
+                this.initializeElements();
+                this.bindEvents();
+                this.initGame();
+            }
+
+            initializeElements() {
+                this.gridContainer = document.getElementById('gridContainer');
+                this.foundWordsContainer = document.getElementById('foundWords');
+                this.levelElement = document.getElementById('currentLevel');
+                this.scoreElement = document.getElementById('currentScore');
+                this.hintButton = document.getElementById('hintButton');
+                this.modal = document.getElementById('modal');
+                this.modalContent = document.getElementById('modalContent');
+                this.closeModal = document.getElementById('closeModal');
+                this.remainingWordsElement = document.getElementById('remainingWords');
+                this.currentWordHintElement = document.getElementById('currentWordHint');
+            }
+
+            bindEvents() {
+                this.hintButton.addEventListener('click', () => this.showHint());
+                this.closeModal.addEventListener('click', () => this.hideModal());
+                
+                window.addEventListener('click', (e) => {
+                    if (e.target === this.modal) {
+                        this.hideModal();
+                    }
+                });
+
+                // 为网格添加鼠标事件
+                this.gridContainer.addEventListener('mousedown', (e) => {
+                    if (e.target.classList.contains('grid-cell')) {
+                        this.startSelection(e.target);
+                    }
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (this.isSelecting) {
+                        const cell = document.elementFromPoint(e.clientX, e.clientY);
+                        if (cell && cell.classList.contains('grid-cell')) {
+                            this.addToSelection(cell);
+                        }
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    this.endSelection();
+                });
+
+                // 为网格添加触摸事件
+                this.gridContainer.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const cell = document.elementFromPoint(touch.clientX, touch.clientY);
+                    if (cell && cell.classList.contains('grid-cell')) {
+                        this.startSelection(cell);
+                    }
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (this.isSelecting) {
+                        const touch = e.touches[0];
+                        const cell = document.elementFromPoint(touch.clientX, touch.clientY);
+                        if (cell && cell.classList.contains('grid-cell')) {
+                            this.addToSelection(cell);
+                        }
+                    }
+                });
+
+                document.addEventListener('touchend', () => {
+                    this.endSelection();
+                });
+            }
+
+            startSelection(cell) {
+                this.isSelecting = true;
+                this.selectedCells = [cell];
+                this.lastSelectedCell = cell;
+                cell.classList.add('selected');
+                this.updateCurrentWord();
+            }
+
+            addToSelection(cell) {
+                if (!this.isSelecting || cell === this.lastSelectedCell) return;
+
+                const isAdjacent = this.isAdjacent(cell);
+                if (isAdjacent && !this.selectedCells.includes(cell)) {
+                    this.selectedCells.push(cell);
+                    this.lastSelectedCell = cell;
+                    cell.classList.add('selected');
+                    this.updateCurrentWord();
+                }
+            }
+
+            endSelection() {
+                if (!this.isSelecting) return;
+                
+                const word = this.selectedCells
+                    .map(cell => cell.textContent)
+                    .join('');
+                
+                this.checkWord(word);
+                
+                this.selectedCells.forEach(cell => {
+                    cell.classList.remove('selected');
+                });
+                
+                this.isSelecting = false;
+                this.selectedCells = [];
+                this.lastSelectedCell = null;
+                this.updateCurrentWord();
+            }
+
+            isAdjacent(cell) {
+                if (this.selectedCells.length === 0) return true;
+                
+                const lastCell = this.selectedCells[this.selectedCells.length - 1];
+                const lastRow = parseInt(lastCell.dataset.row);
+                const lastCol = parseInt(lastCell.dataset.col);
+                const currentRow = parseInt(cell.dataset.row);
+                const currentCol = parseInt(cell.dataset.col);
+                
+                const rowDiff = Math.abs(currentRow - lastRow);
+                const colDiff = Math.abs(currentCol - lastCol);
+                
+                return (rowDiff <= 1 && colDiff <= 1);
+            }
+
+            updateCurrentWord() {
+                const currentWordElement = document.getElementById('currentWord');
+                if (this.selectedCells.length > 0) {
+                    const word = this.selectedCells.map(cell => cell.textContent).join('');
+                    currentWordElement.textContent = word;
+                } else {
+                    currentWordElement.textContent = '';
+                }
+            }
+
+            showModal(content, type = '') {
+                this.modalContent.innerHTML = content;
+                this.modal.className = `modal ${type}`;
+                this.modal.style.display = 'flex';
+            }
+
+            hideModal() {
+                this.modal.style.display = 'none';
+            }
+
+            initGame() {
+                const level = this.gameData.levels[this.currentLevel - 1];
+                this.createInitialGrid(level.words);
+                this.updateUI();
+                this.showCurrentWordHint();
+            }
+
+            createInitialGrid(words) {
+                // 创建一个空的网格
+                this.grid = Array(this.gameData.levels[this.currentLevel - 1].gridSize).fill().map(() => Array(this.gameData.levels[this.currentLevel - 1].gridSize).fill(''));
+                
+                // 获取当前需要放置的单词
+                const currentWord = words[this.currentWordIndex].word;
+                const remainingWords = words.slice(this.currentWordIndex + 1);
+                
+                // 放置当前单词的字母
+                this.placeWordInGrid(currentWord);
+                
+                // 填充剩余空格
+                this.fillRemainingSpaces(remainingWords);
+                
+                // 渲染网格
+                this.renderGrid();
+            }
+
+            placeWordInGrid(word) {
+                // 随机选择一个起始位置和方向(水平或垂直)
+                const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+                let placed = false;
+                
+                while (!placed) {
+                    const startRow = Math.floor(Math.random() * this.gameData.levels[this.currentLevel - 1].gridSize);
+                    const startCol = Math.floor(Math.random() * this.gameData.levels[this.currentLevel - 1].gridSize);
+                    
+                    if (direction === 'horizontal' && startCol + word.length <= this.gameData.levels[this.currentLevel - 1].gridSize) {
+                        // 检查是否可以放置
+                        let canPlace = true;
+                        for (let i = 0; i < word.length; i++) {
+                            if (this.grid[startRow][startCol + i] !== '') {
+                                canPlace = false;
+                                break;
+                            }
+                        }
+                        
+                        if (canPlace) {
+                            // 放置单词
+                            for (let i = 0; i < word.length; i++) {
+                                this.grid[startRow][startCol + i] = word[i];
+                            }
+                            placed = true;
+                        }
+                    } else if (direction === 'vertical' && startRow + word.length <= this.gameData.levels[this.currentLevel - 1].gridSize) {
+                        // 检查是否可以放置
+                        let canPlace = true;
+                        for (let i = 0; i < word.length; i++) {
+                            if (this.grid[startRow + i][startCol] !== '') {
+                                canPlace = false;
+                                break;
+                            }
+                        }
+                        
+                        if (canPlace) {
+                            // 放置单词
+                            for (let i = 0; i < word.length; i++) {
+                                this.grid[startRow + i][startCol] = word[i];
+                            }
+                            placed = true;
+                        }
+                    }
+                }
+            }
+
+            fillRemainingSpaces(remainingWords) {
+                // 收集所有剩余单词的字母
+                let remainingLetters = remainingWords.map(word => word.word.split('')).flat();
+                
+                // 如果剩余字母不够,添加一些随机字母
+                const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                while (remainingLetters.length < this.gameData.levels[this.currentLevel - 1].gridSize * this.gameData.levels[this.currentLevel - 1].gridSize) {
+                    remainingLetters.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+                }
+                
+                // 随机打乱剩余字母
+                remainingLetters = this.shuffleArray(remainingLetters);
+                
+                // 填充空格
+                let letterIndex = 0;
+                for (let i = 0; i < this.gameData.levels[this.currentLevel - 1].gridSize; i++) {
+                    for (let j = 0; j < this.gameData.levels[this.currentLevel - 1].gridSize; j++) {
+                        if (this.grid[i][j] === '') {
+                            this.grid[i][j] = remainingLetters[letterIndex++];
+                        }
+                    }
+                }
+            }
+
+            shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            renderGrid() {
+                this.gridContainer.innerHTML = '';
+                
+                for (let i = 0; i < this.gameData.levels[this.currentLevel - 1].gridSize; i++) {
+                    for (let j = 0; j < this.gameData.levels[this.currentLevel - 1].gridSize; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        cell.textContent = this.grid[i][j];
+                        cell.dataset.row = i;
+                        cell.dataset.col = j;
+                        this.gridContainer.appendChild(cell);
+                    }
+                }
+            }
+
+            updateUI() {
+                this.levelElement.textContent = this.currentLevel;
+                this.scoreElement.textContent = this.currentScore;
+                const level = this.gameData.levels[this.currentLevel - 1];
+                const remainingWords = level.words.length - this.foundWords.size;
+                
+                // 更新剩余单词数量
+                this.remainingWordsElement.textContent = `剩余单词: ${remainingWords}`;
+                
+                // 显示当前要找的单词提示
+                const currentWord = level.words[this.currentWordIndex];
+                if (currentWord) {
+                    const hintContent = `目标单词: ${currentWord.word.length}个字母`;
+                    this.currentWordHintElement.textContent = hintContent;
+                }
+            }
+
+            showCurrentWordHint() {
+                const level = this.gameData.levels[this.currentLevel - 1];
+                const currentWord = level.words[this.currentWordIndex];
+                if (currentWord) {
+                    const hintContent = `
+                        <h3>当前目标单词</h3>
+                        <p>字母数: ${currentWord.word.length}个字母</p>
+                        <p>首字母: ${currentWord.word[0]}</p>
+                        <p>提示: ${currentWord.hint}</p>
+                    `;
+                    this.showModal(hintContent);
+                }
+            }
+
+            showHint() {
+                const level = this.gameData.levels[this.currentLevel - 1];
+                const currentWord = level.words[this.currentWordIndex];
+                if (currentWord) {
+                    const hintContent = `
+                        <h3>提示</h3>
+                        <p>目标单词: ${currentWord.word.length}个字母</p>
+                        <p>首字母: ${currentWord.word[0]}</p>
+                        <p>提示: ${currentWord.hint}</p>
+                    `;
+                    this.showModal(hintContent);
+                }
+            }
+
+            checkWord(word) {
+                const level = this.gameData.levels[this.currentLevel - 1];
+                const currentWord = level.words[this.currentWordIndex];
+                
+                if (word === currentWord.word && !this.foundWords.has(word)) {
+                    this.foundWords.add(word);
+                    this.currentScore += word.length;
+                    
+                    // 显示成功消息
+                    const successContent = `
+                        <h3>恭喜！</h3>
+                        <p>你找到了单词: ${word}</p>
+                        <p>释义: ${currentWord.definition}</p>
+                        <p>例句: ${currentWord.example}</p>
+                    `;
+                    this.showModal(successContent, 'success');
+                    
+                    // 更新UI
+                    this.updateUI();
+                    
+                    // 检查是否还有下一个单词
+                    if (this.currentWordIndex < level.words.length - 1) {
+                        this.currentWordIndex++;
+                        // 重新排列字母
+                        setTimeout(() => {
+                            this.createInitialGrid(level.words);
+                            this.showCurrentWordHint();
+                        }, 2000);
+                    } else if (this.currentLevel < this.gameData.levels.length) {
+                        // 如果当前关卡的所有单词都找到了，进入下一关
+                        setTimeout(() => {
+                            this.currentLevel++;
+                            this.currentWordIndex = 0;
+                            this.foundWords.clear();
+                            this.initGame();
+                        }, 2000);
+                    } else {
+                        // 所有关卡都完成了
+                        setTimeout(() => {
+                            this.showModal('<h3>恭喜！</h3><p>你已完成所有单词！</p>', 'success');
+                        }, 2000);
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new WordConnect();
+        });
+    </script>
+</head>
+<body>
+    <div class="back-button">
+        <button onclick="window.location.href='../../index.html'">返回主页</button>
+    </div>
+    <main class="game-container">
+        <div class="game-info">
+            <div class="level-info">关卡：<span id="currentLevel">1</span></div>
+            <div class="score-info">得分：<span id="currentScore">0</span></div>
+            <div class="remaining-info">剩余单词：<span id="remainingWords">4</span></div>
+        </div>
+
+        <div class="current-word-display">
+            <p>当前选择：<span id="currentWord"></span></p>
+            <p id="currentWordHint"></p>
+        </div>
+
+        <div class="game-area">
+            <div class="grid-container" id="gridContainer">
+                <!-- 字母网格将在这里生成 -->
+            </div>
+        </div>
+
+        <div class="found-words-container">
+            <h3>已找到的单词</h3>
+            <div id="foundWords" class="found-words">
+                <!-- 已找到的单词将在这里显示 -->
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button class="hint-button" id="hintButton">显示提示</button>
+        </div>
+    </main>
+    <footer class="footer">
+        <p>2024 儿童互动游戏教学平台 - 让学习更有趣！</p>
+        <p>2024 儿童互动游戏乐园 by lickfeng</p>
+        <p>交流讨论请添加微信：lick-feng</p>
+    </footer>
+
+    <!-- 模态框 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+</body>
+</html>

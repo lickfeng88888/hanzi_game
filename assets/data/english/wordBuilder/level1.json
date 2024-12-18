@@ -1,0 +1,40 @@
+{
+    "words": [
+        {
+            "word": "apple",
+            "fragments": ["ap", "ple"],
+            "hint": "A fruit that keeps the doctor away...",
+            "definition": "A round fruit with red or green skin and white flesh"
+        },
+        {
+            "word": "happy",
+            "fragments": ["hap", "py"],
+            "hint": "When you feel good and smile a lot...",
+            "definition": "Feeling or showing pleasure and contentment"
+        },
+        {
+            "word": "table",
+            "fragments": ["ta", "ble"],
+            "hint": "A piece of furniture with a flat top...",
+            "definition": "A piece of furniture with a flat top and legs"
+        },
+        {
+            "word": "pencil",
+            "fragments": ["pen", "cil"],
+            "hint": "You write with this tool...",
+            "definition": "An instrument for writing or drawing with graphite"
+        },
+        {
+            "word": "window",
+            "fragments": ["win", "dow"],
+            "hint": "You can see outside through this...",
+            "definition": "An opening in a wall or vehicle that lets in light and air"
+        }
+    ],
+    "levelInfo": {
+        "level": 1,
+        "difficulty": "easy",
+        "requiredScore": 50,
+        "timeLimit": 300
+    }
+}

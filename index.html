@@ -3,51 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>汉字游戏乐园</title>
+    <title>7-12岁儿童互动游戏教学平台</title>
+    <meta name="description" content="专为7-12岁儿童设计的汉字和英语互动学习游戏平台，让学习更有趣！">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/english/english-games.css">
 </head>
 <body>
     <header>
-        <h1>汉字游戏乐园</h1>
+        <h1>儿童互动游戏教学平台</h1>
+        <p>专为7-12岁儿童设计的趣味学习平台</p>
     </header>
     
     <main>
-        <div class="game-grid">
-            <div class="game-card" data-game="dragWord">
-                <h2>词语拖拽拼搭</h2>
-                <p>拖拽汉字组成词语，边玩边学！</p>
-                <button onclick="location.href='pages/dragWord.html'">开始游戏</button>
+        <!-- 汉字游戏区域 -->
+        <section class="chinese-games">
+            <h2>汉字游戏乐园</h2>
+            <div class="game-grid">
+                <div class="game-card" data-game="dragWord">
+                    <h2>词语拖拽拼搭</h2>
+                    <p>拖拽汉字组成词语，边玩边学！</p>
+                    <button onclick="location.href='pages/dragWord.html'">开始游戏</button>
+                </div>
+                
+                <div class="game-card" data-game="connectLine">
+                    <h2>文字连线找朋友</h2>
+                    <p>连接相关的文字，找到它们的朋友！</p>
+                    <button onclick="location.href='pages/connectLine.html'">开始游戏</button>
+                </div>
+                
+                <div class="game-card" data-game="wordEliminate">
+                    <h2>词语消消乐</h2>
+                    <p>点击正确的汉字，组成完整词语！</p>
+                    <button onclick="location.href='pages/wordEliminate.html'">开始游戏</button>
+                </div>
+                
+                <div class="game-card" data-game="pinyinDrag">
+                    <h2>拼音拖拽填空</h2>
+                    <p>根据拼音提示填写正确的汉字！</p>
+                    <button onclick="location.href='pages/pinyinDrag.html'">开始游戏</button>
+                </div>
+                
+                <div class="game-card" data-game="wordChain">
+                    <h2>组词接龙闯关</h2>
+                    <p>用词语接龙的方式，考验你的词汇量！</p>
+                    <button onclick="location.href='pages/wordChain.html'">开始游戏</button>
+                </div>
             </div>
-            
-            <div class="game-card" data-game="connectLine">
-                <h2>文字连线找朋友</h2>
-                <p>连接相关的文字，找到它们的朋友！</p>
-                <button onclick="location.href='pages/connectLine.html'">开始游戏</button>
+        </section>
+
+        <!-- 英语游戏区域 -->
+        <section class="english-games">
+            <h2>英语游戏乐园</h2>
+            <div class="english-games-grid">
+                <div class="english-game-card" onclick="window.location.href='pages/english/wordBuilder.html'">
+                    <div class="game-icon">🏗️</div>
+                    <h3>单词构建</h3>
+                    <p>通过拼搭单词片段，学习词汇构建</p>
+                    <span class="level-badge">Level 1-10</span>
+                </div>
+
+                <div class="english-game-card" onclick="window.location.href='pages/english/wordConnect.html'">
+                    <div class="game-icon">🔗</div>
+                    <h3>单词连线</h3>
+                    <p>连线匹配单词与释义</p>
+                    <span class="level-badge">Level 1-10</span>
+                </div>
+
+                <div class="english-game-card" onclick="window.location.href='pages/english/wordElimination.html'">
+                    <div class="game-icon">💫</div>
+                    <h3>单词消除</h3>
+                    <p>寻找并消除正确的单词</p>
+                    <span class="level-badge">Level 1-10</span>
+                </div>
+
+                <div class="english-game-card" onclick="window.location.href='pages/english/wordChain.html'">
+                    <div class="game-icon">⛓️</div>
+                    <h3>单词接龙</h3>
+                    <p>趣味单词接龙游戏</p>
+                    <span class="level-badge">Level 1-10</span>
+                </div>
+
+                <div class="english-game-card" onclick="window.location.href='pages/english/wordMatch.html'">
+                    <div class="game-icon">🔄</div>
+                    <h3>同义词反义词</h3>
+                    <p>匹配同义词和反义词</p>
+                    <span class="level-badge">Level 1-10</span>
+                </div>
             </div>
-            
-            <div class="game-card" data-game="wordEliminate">
-                <h2>词语消消乐</h2>
-                <p>点击正确的汉字，组成完整词语！</p>
-                <button onclick="location.href='pages/wordEliminate.html'">开始游戏</button>
-            </div>
-            
-            <div class="game-card" data-game="pinyinDrag">
-                <h2>拼音拖拽填空</h2>
-                <p>根据拼音提示填写正确的汉字！</p>
-                <button onclick="location.href='pages/pinyinDrag.html'">开始游戏</button>
-            </div>
-            
-            <div class="game-card" data-game="wordChain">
-                <h2>组词接龙闯关</h2>
-                <p>用词语接龙的方式，考验你的词汇量！</p>
-                <button onclick="location.href='pages/wordChain.html'">开始游戏</button>
-            </div>
-        </div>
+        </section>
     </main>
     
     <footer class="footer">
-        <p> 2024 汉字游戏乐园 - 让学习更有趣！</p>
-        <p>© 2024 汉字游戏乐园 by lickfeng</p>
+        <p>2024 儿童互动游戏教学平台 - 让学习更有趣！</p>
+        <p>2024 儿童互动游戏乐园 by lickfeng</p>
         <p>交流讨论请添加微信：lick-feng</p>
     </footer>
 

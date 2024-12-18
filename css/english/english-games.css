@@ -1,0 +1,98 @@
+/* 英语游戏区域样式 */
+.english-games {
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+
+.english-games h2 {
+    color: #333;
+    text-align: center;
+    margin: 1.5rem 0;
+    font-size: 1.8rem;
+}
+
+.english-games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.english-game-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.english-game-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.game-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+.english-game-card h3 {
+    color: #333;
+    margin: 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.english-game-card p {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.level-badge {
+    display: inline-block;
+    background: #ff6b6b;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .english-games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .game-icon {
+        font-size: 2rem;
+        height: 50px;
+    }
+
+    .english-game-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .english-game-card p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .english-games-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -80,6 +80,240 @@
     </footer>
 
     <script src="../data/wordEliminate/questions.js"></script>
+    <script>
+        // 游戏数据
+        const gameData = {
+            levels: [
+                {
+                    name: "初级 - 基础词汇",
+                    gridSize: 6,
+                    words: [
+                        {
+                            word: "BOOK",
+                            hint: "用来阅读的物品",
+                            definition: "书本，读物",
+                            example: "I like to read a book before bed."
+                        },
+                        {
+                            word: "DESK",
+                            hint: "学习或工作用的家具",
+                            definition: "书桌，办公桌",
+                            example: "Put your books on the desk."
+                        },
+                        {
+                            word: "LAMP",
+                            hint: "照明用的物品",
+                            definition: "台灯，照明灯",
+                            example: "Turn on the lamp when it gets dark."
+                        },
+                        {
+                            word: "DOOR",
+                            hint: "进出房间的通道",
+                            definition: "门，出入口",
+                            example: "Please close the door."
+                        },
+                        {
+                            word: "WALL",
+                            hint: "房间的竖直面",
+                            definition: "墙，墙壁",
+                            example: "The wall is painted white."
+                        }
+                    ]
+                },
+                {
+                    name: "初级 - 颜色世界",
+                    gridSize: 6,
+                    words: [
+                        {
+                            word: "BLUE",
+                            hint: "天空的颜色",
+                            definition: "蓝色",
+                            example: "The sky is blue today."
+                        },
+                        {
+                            word: "PINK",
+                            hint: "少女喜欢的颜色",
+                            definition: "粉色",
+                            example: "She wore a pink dress."
+                        },
+                        {
+                            word: "GOLD",
+                            hint: "金子的颜色",
+                            definition: "金色",
+                            example: "The ring is made of gold."
+                        },
+                        {
+                            word: "GRAY",
+                            hint: "介于黑白之间的颜色",
+                            definition: "灰色",
+                            example: "The clouds are gray."
+                        },
+                        {
+                            word: "BROWN",
+                            hint: "树干的颜色",
+                            definition: "棕色",
+                            example: "The table is brown."
+                        }
+                    ]
+                },
+                {
+                    name: "中级 - 自然环境",
+                    gridSize: 7,
+                    words: [
+                        {
+                            word: "RIVER",
+                            hint: "流动的水体",
+                            definition: "河流",
+                            example: "The river flows to the sea."
+                        },
+                        {
+                            word: "BEACH",
+                            hint: "海边的沙滩",
+                            definition: "海滩",
+                            example: "Let's go to the beach."
+                        },
+                        {
+                            word: "GRASS",
+                            hint: "绿色的植物",
+                            definition: "草，草地",
+                            example: "The grass needs cutting."
+                        },
+                        {
+                            word: "OCEAN",
+                            hint: "巨大的水体",
+                            definition: "海洋",
+                            example: "The ocean is very deep."
+                        },
+                        {
+                            word: "MOUNTAIN",
+                            hint: "高耸的地形",
+                            definition: "山，山脉",
+                            example: "They climbed the mountain."
+                        }
+                    ]
+                },
+                {
+                    name: "中级 - 情感表达",
+                    gridSize: 7,
+                    words: [
+                        {
+                            word: "HAPPY",
+                            hint: "开心的感觉",
+                            definition: "快乐的",
+                            example: "The children are happy."
+                        },
+                        {
+                            word: "ANGRY",
+                            hint: "生气的状态",
+                            definition: "愤怒的",
+                            example: "Don't get angry so easily."
+                        },
+                        {
+                            word: "TIRED",
+                            hint: "疲惫的感觉",
+                            definition: "疲倦的",
+                            example: "I am tired after work."
+                        },
+                        {
+                            word: "PROUD",
+                            hint: "自豪的心情",
+                            definition: "骄傲的",
+                            example: "Parents are proud of their children."
+                        },
+                        {
+                            word: "SCARED",
+                            hint: "害怕的情绪",
+                            definition: "害怕的",
+                            example: "The child was scared of the dark."
+                        }
+                    ]
+                },
+                {
+                    name: "高级 - 抽象概念",
+                    gridSize: 8,
+                    words: [
+                        {
+                            word: "FREEDOM",
+                            hint: "自由的状态",
+                            definition: "自由",
+                            example: "Everyone wants freedom."
+                        },
+                        {
+                            word: "COURAGE",
+                            hint: "勇敢的品质",
+                            definition: "勇气",
+                            example: "It takes courage to speak up."
+                        },
+                        {
+                            word: "WISDOM",
+                            hint: "智慧的品质",
+                            definition: "智慧",
+                            example: "Age brings wisdom."
+                        },
+                        {
+                            word: "JUSTICE",
+                            hint: "公平的概念",
+                            definition: "正义",
+                            example: "We all seek justice."
+                        },
+                        {
+                            word: "PEACE",
+                            hint: "和平的状态",
+                            definition: "和平",
+                            example: "Everyone wants peace in the world."
+                        }
+                    ]
+                },
+                {
+                    name: "高级 - 科技术语",
+                    gridSize: 8,
+                    words: [
+                        {
+                            word: "COMPUTER",
+                            hint: "电子计算设备",
+                            definition: "计算机",
+                            example: "I work on my computer."
+                        },
+                        {
+                            word: "INTERNET",
+                            hint: "全球信息网络",
+                            definition: "互联网",
+                            example: "The internet connects people."
+                        },
+                        {
+                            word: "SOFTWARE",
+                            hint: "计算机程序",
+                            definition: "软件",
+                            example: "Install the new software."
+                        },
+                        {
+                            word: "DATABASE",
+                            hint: "数据存储系统",
+                            definition: "数据库",
+                            example: "Store data in the database."
+                        },
+                        {
+                            word: "NETWORK",
+                            hint: "连接系统",
+                            definition: "网络",
+                            example: "The network is down."
+                        }
+                    ]
+                }
+            ],
+            settings: {
+                timeLimit: 300,           // 每关时间限制（秒）
+                scorePerMatch: 10,        // 每对匹配的分数
+                bonusTimeScore: 5,        // 剩余时间奖励分数（每30秒）
+                hintPenalty: 2,          // 使用提示扣除的分数
+                passingScore: {
+                    easy: 40,            // 初级关卡及格分数
+                    medium: 50,          // 中级关卡及格分数
+                    hard: 60             // 高级关卡及格分数
+                }
+            }
+        };
+    </script>
     <script src="../js/games/wordEliminate.js"></script>
 </body>
 </html>

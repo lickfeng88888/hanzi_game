@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词接龙 - 英语游戏</title>
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/common/footer.css">
+    <link rel="stylesheet" href="../../css/english/wordChain.css">
+</head>
+<body>
+    <div class="back-button">
+        <button onclick="window.location.href='../../index.html'">返回主页</button>
+    </div>
+    <main class="game-container">
+        <header>
+            <h1>单词接龙游戏</h1>
+            <p>用上一个单词的最后一个字母开始新单词！</p>
+        </header>
+        <div class="game-title">
+            <h1>单词接龙</h1>
+            <p>用词尾字母开始下一个单词！</p>
+        </div>
+
+        <div class="game-header">
+            <div class="score-container">得分: <span id="score">0</span></div>
+            <div class="level-container">关卡: <span id="level">1</span></div>
+            <div class="mode-container">模式: <span id="mode">初级</span></div>
+        </div>
+
+        <div class="game-board">
+            <div class="word-chain" id="word-chain">
+                <!-- 单词链将在这里动态显示 -->
+            </div>
+
+            <div class="input-section">
+                <input type="text" id="word-input" class="word-input" placeholder="输入一个单词..." autocomplete="off">
+                <button id="submit-button" class="submit-button">提交</button>
+            </div>
+
+            <div class="suggestions" id="suggestions">
+                <!-- 推荐单词将在这里显示 -->
+            </div>
+        </div>
+
+        <div class="hint-container" id="hint-container">
+            <!-- 提示信息将在这里显示 -->
+        </div>
+
+        <div class="game-controls">
+            <button class="game-button" id="hint-button">显示提示</button>
+            <button class="game-button" id="reset-button">重新开始</button>
+            <button class="game-button" id="rules-button">游戏规则</button>
+        </div>
+    </main>
+    <footer class="footer">
+        <p>2024 儿童互动游戏教学平台 - 让学习更有趣！</p>
+        <p>2024 儿童互动游戏乐园 by lickfeng</p>
+        <p>交流讨论请添加微信：lick-feng</p>
+    </footer>
+
+    <div class="modal" id="message-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-message"></p>
+            <button id="modal-button">继续</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const gameData = {
+            levels: [
+                {
+                    name: "初级 - 动物世界",
+                    description: "简单的动物相关单词",
+                    words: [
+                        {
+                            word: "CAT",
+                            hint: "一种常见的宠物",
+                            definition: "猫，猫科动物",
+                            example: "The cat is sleeping.",
+                            nextLetters: ["T"]
+                        },
+                        {
+                            word: "TIGER",
+                            hint: "丛林之王",
+                            definition: "老虎，大型猫科动物",
+                            example: "The tiger is hunting.",
+                            nextLetters: ["R"]
+                        },
+                        {
+                            word: "RABBIT",
+                            hint: "有长耳朵的动物",
+                            definition: "兔子，兔类动物",
+                            example: "The rabbit is eating carrots.",
+                            nextLetters: ["T"]
+                        },
+                        {
+                            word: "TURTLE",
+                            hint: "爬行动物，有硬壳",
+                            definition: "乌龟，爬行动物",
+                            example: "The turtle is slow but steady.",
+                            nextLetters: ["E"]
+                        },
+                        {
+                            word: "ELEPHANT",
+                            hint: "最大的陆地动物",
+                            definition: "大象，哺乳动物",
+                            example: "The elephant has a long trunk.",
+                            nextLetters: ["T"]
+                        }
+                    ],
+                    timeLimit: 60,
+                    minWordLength: 3,
+                    maxWordLength: 7,
+                    scorePerWord: 10
+                },
+                {
+                    name: "初级 - 食物天地",
+                    description: "常见的食物单词",
+                    words: [
+                        {
+                            word: "BREAD",
+                            hint: "主食之一",
+                            definition: "面包，烘焙食品",
+                            example: "I eat bread for breakfast.",
+                            nextLetters: ["D"]
+                        },
+                        {
+                            word: "DONUT",
+                            hint: "甜甜圈",
+                            definition: "甜甜圈，甜点",
+                            example: "The donut is sweet.",
+                            nextLetters: ["T"]
+                        },
+                        {
+                            word: "TOMATO",
+                            hint: "红色的蔬菜",
+                            definition: "番茄，蔬菜",
+                            example: "I like tomato sauce.",
+                            nextLetters: ["O"]
+                        },
+                        {
+                            word: "ORANGE",
+                            hint: "橙色的水果",
+                            definition: "橙子，柑橘类水果",
+                            example: "The orange is juicy.",
+                            nextLetters: ["E"]
+                        },
+                        {
+                            word: "EGG",
+                            hint: "早餐常见食物",
+                            definition: "鸡蛋，禽类蛋",
+                            example: "I like fried eggs.",
+                            nextLetters: ["G"]
+                        }
+                    ],
+                    timeLimit: 60,
+                    minWordLength: 3,
+                    maxWordLength: 6,
+                    scorePerWord: 10
+                },
+                {
+                    name: "中级 - 运动健身",
+                    description: "运动和健身相关单词",
+                    words: [
+                        {
+                            word: "SWIM",
+                            hint: "在水中运动",
+                            definition: "游泳，游水",
+                            example: "I swim every morning.",
+                            nextLetters: ["M"]
+                        },
+                        {
+                            word: "MATCH",
+                            hint: "比赛，竞赛",
+                            definition: "比赛，竞赛",
+                            example: "The match starts at 2 PM.",
+                            nextLetters: ["H"]
+                        },
+                        {
+                            word: "HOCKEY",
+                            hint: "冰上运动",
+                            definition: "曲棍球，冰球",
+                            example: "They play hockey in winter.",
+                            nextLetters: ["Y"]
+                        },
+                        {
+                            word: "YOGA",
+                            hint: "一种健身运动",
+                            definition: "瑜伽，瑜伽术",
+                            example: "Yoga helps me relax.",
+                            nextLetters: ["A"]
+                        },
+                        {
+                            word: "ATHLETE",
+                            hint: "运动员",
+                            definition: "运动员，体育选手",
+                            example: "He is a professional athlete.",
+                            nextLetters: ["E"]
+                        },
+                        {
+                            word: "EXERCISE",
+                            hint: "锻炼身体",
+                            definition: "运动，锻炼",
+                            example: "Daily exercise is important.",
+                            nextLetters: ["E"]
+                        }
+                    ],
+                    timeLimit: 90,
+                    minWordLength: 4,
+                    maxWordLength: 8,
+                    scorePerWord: 15
+                },
+                {
+                    name: "中级 - 职业工作",
+                    description: "职业和工作相关单词",
+                    words: [
+                        {
+                            word: "TEACH",
+                            hint: "教书育人",
+                            definition: "教，教授",
+                            example: "She teaches English.",
+                            nextLetters: ["H"]
+                        },
+                        {
+                            word: "HIRE",
+                            hint: "雇佣员工",
+                            definition: "雇用，聘用",
+                            example: "They want to hire more staff.",
+                            nextLetters: ["E"]
+                        },
+                        {
+                            word: "EMPLOY",
+                            hint: "给予工作",
+                            definition: "雇用，使用",
+                            example: "The company employs 100 people.",
+                            nextLetters: ["Y"]
+                        },
+                        {
+                            word: "YOUTH",
+                            hint: "年轻人",
+                            definition: "青年，年轻",
+                            example: "The youth need more jobs.",
+                            nextLetters: ["H"]
+                        },
+                        {
+                            word: "HELP",
+                            hint: "提供帮助",
+                            definition: "帮助，援助",
+                            example: "Can you help me?",
+                            nextLetters: ["P"]
+                        },
+                        {
+                            word: "PLAN",
+                            hint: "制定计划",
+                            definition: "计划，规划",
+                            example: "We need to plan ahead.",
+                            nextLetters: ["N"]
+                        }
+                    ],
+                    timeLimit: 90,
+                    minWordLength: 4,
+                    maxWordLength: 8,
+                    scorePerWord: 15
+                },
+                {
+                    name: "高级 - 科技世界",
+                    description: "科技和互联网相关单词",
+                    words: [
+                        {
+                            word: "PROGRAM",
+                            hint: "编写代码",
+                            definition: "程序，编程",
+                            example: "I program in Python.",
+                            nextLetters: ["M"]
+                        },
+                        {
+                            word: "MOBILE",
+                            hint: "便携设备",
+                            definition: "移动的，手机",
+                            example: "I have a mobile phone.",
+                            nextLetters: ["E"]
+                        },
+                        {
+                            word: "ENCRYPT",
+                            hint: "数据加密",
+                            definition: "加密，编码",
+                            example: "Encrypt your password.",
+                            nextLetters: ["T"]
+                        },
+                        {
+                            word: "TECHNOLOGY",
+                            hint: "科学技术",
+                            definition: "技术，工艺",
+                            example: "Technology changes fast.",
+                            nextLetters: ["Y"]
+                        },
+                        {
+                            word: "YOUTUBE",
+                            hint: "视频平台",
+                            definition: "油管，视频网站",
+                            example: "Watch it on YouTube.",
+                            nextLetters: ["E"]
+                        },
+                        {
+                            word: "ENGINEER",
+                            hint: "工程师",
+                            definition: "工程师，技师",
+                            example: "He is a software engineer.",
+                            nextLetters: ["R"]
+                        }
+                    ],
+                    timeLimit: 120,
+                    minWordLength: 5,
+                    maxWordLength: 10,
+                    scorePerWord: 20
+                },
+                {
+                    name: "高级 - 学术研究",
+                    description: "学术和研究相关单词",
+                    words: [
+                        {
+                            word: "RESEARCH",
+                            hint: "研究工作",
+                            definition: "研究，调查",
+                            example: "Do research on climate.",
+                            nextLetters: ["H"]
+                        },
+                        {
+                            word: "HYPOTHESIS",
+                            hint: "科学假设",
+                            definition: "假设，假说",
+                            example: "Test your hypothesis.",
+                            nextLetters: ["S"]
+                        },
+                        {
+                            word: "SCIENCE",
+                            hint: "科学领域",
+                            definition: "科学，理科",
+                            example: "Study natural science.",
+                            nextLetters: ["E"]
+                        },
+                        {
+                            word: "EXPERIMENT",
+                            hint: "科学实验",
+                            definition: "实验，试验",
+                            example: "Conduct an experiment.",
+                            nextLetters: ["T"]
+                        },
+                        {
+                            word: "THEORY",
+                            hint: "理论知识",
+                            definition: "理论，学说",
+                            example: "Develop a new theory.",
+                            nextLetters: ["Y"]
+                        },
+                        {
+                            word: "YOURSELF",
+                            hint: "你自己",
+                            definition: "你自己，自身",
+                            example: "Believe in yourself.",
+                            nextLetters: ["F"]
+                        }
+                    ],
+                    timeLimit: 120,
+                    minWordLength: 5,
+                    maxWordLength: 10,
+                    scorePerWord: 20
+                }
+            ],
+            settings: {
+                defaultTimeLimit: 60,        // 默认时间限制（秒）
+                bonusTimePerWord: 5,         // 每个正确单词奖励时间（秒）
+                hintPenalty: 2,             // 使用提示扣除的分数
+                passingScore: {
+                    easy: 30,               // 初级关卡及格分数
+                    medium: 40,             // 中级关卡及格分数
+                    hard: 50                // 高级关卡及格分数
+                }
+            }
+        };
+
+        // 游戏状态
+        let gameState = {
+            currentLevel: 0,
+            score: 0,
+            timeLeft: 60,
+            usedWords: [],
+            lastWord: "",
+            timer: null
+        };
+
+        // DOM 元素
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const modeElement = document.getElementById('mode');
+        const wordChainElement = document.getElementById('word-chain');
+        const wordInput = document.getElementById('word-input');
+        const submitButton = document.getElementById('submit-button');
+        const suggestionsElement = document.getElementById('suggestions');
+        const hintContainer = document.getElementById('hint-container');
+        const modal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalButton = document.getElementById('modal-button');
+        const closeModal = document.getElementById('close-modal');
+
+        // 初始化游戏
+        function initGame() {
+            gameState = {
+                currentLevel: 0,
+                score: 0,
+                timeLeft: 60,
+                usedWords: [],
+                lastWord: "",
+                timer: null
+            };
+
+            // 随机选择一个起始单词
+            const startWords = gameData.levels[gameState.currentLevel].words;
+            gameState.lastWord = startWords[Math.floor(Math.random() * startWords.length)].word;
+            gameState.usedWords = [gameState.lastWord];
+
+            updateDisplay();
+            updateScore();
+            showSuggestions();
+        }
+
+        // 更新显示
+        function updateDisplay() {
+            wordChainElement.innerHTML = '';
+            gameState.usedWords.forEach((word, index) => {
+                const wordElement = document.createElement('span');
+                wordElement.className = 'chain-word';
+                wordElement.textContent = word;
+                wordChainElement.appendChild(wordElement);
+
+                if (index < gameState.usedWords.length - 1) {
+                    const arrow = document.createElement('span');
+                    arrow.className = 'chain-arrow';
+                    arrow.textContent = '→';
+                    wordChainElement.appendChild(arrow);
+                }
+            });
+        }
+
+        // 更新分数
+        function updateScore() {
+            scoreElement.textContent = gameState.score;
+            levelElement.textContent = gameState.currentLevel + 1;
+            modeElement.textContent = gameData.levels[gameState.currentLevel].name;
+        }
+
+        // 显示建议单词
+        function showSuggestions() {
+            suggestionsElement.innerHTML = '';
+            const lastWord = gameState.lastWord;
+            const lastLetter = lastWord[lastWord.length - 1];
+            
+            let correctSuggestions = [];
+            let allWords = [];
+
+            // 获取正确的建议单词
+            const levelWords = gameData.levels[gameState.currentLevel].words;
+            levelWords.forEach(word => {
+                if (word.word.startsWith(lastLetter) && !gameState.usedWords.includes(word.word)) {
+                    correctSuggestions.push(word.word);
+                }
+                allWords.push(word.word);
+            });
+
+            // 过滤掉已使用的单词
+            correctSuggestions = correctSuggestions.filter(word => !gameState.usedWords.includes(word));
+            allWords = allWords.filter(word => !gameState.usedWords.includes(word));
+
+            // 随机选择2-3个正确的建议
+            const correctCount = Math.min(Math.floor(Math.random() * 2) + 2, correctSuggestions.length);
+            const selectedCorrect = shuffleArray(correctSuggestions).slice(0, correctCount);
+
+            // 从其他单词中随机选择干扰项
+            const wrongWords = shuffleArray(allWords.filter(word => 
+                !selectedCorrect.includes(word) && 
+                !word.startsWith(lastLetter)
+            )).slice(0, 5 - correctCount);
+
+            // 合并并打乱所有选项
+            const allSuggestions = shuffleArray([...selectedCorrect, ...wrongWords]);
+
+            // 显示所有选项
+            allSuggestions.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'suggestion-word';
+                wordElement.textContent = word;
+                wordElement.addEventListener('click', () => {
+                    wordInput.value = word;
+                    checkWord(word);
+                });
+                suggestionsElement.appendChild(wordElement);
+            });
+        }
+
+        // 随机打乱数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 检查单词
+        function checkWord(word) {
+            const lastWord = gameState.lastWord;
+            const currentLevel = gameData.levels[gameState.currentLevel];
+            const lastWordData = currentLevel.words.find(w => w.word.toLowerCase() === lastWord.toLowerCase());
+            
+            // 检查单词是否在允许的下一个字母列表中开始
+            if (lastWordData && 
+                lastWordData.nextLetters.includes(word[0].toUpperCase()) && 
+                !gameState.usedWords.includes(word)) {
+                // 正确答案
+                gameState.score += 10;
+                gameState.lastWord = word;
+                gameState.usedWords.push(word);
+
+                if (gameState.usedWords.length >= 5) {
+                    gameState.currentLevel++;
+                    if (gameState.currentLevel >= gameData.levels.length) {
+                        showModal('恭喜过关！', '你已完成所有关卡，是否要重新开始？', '重新开始');
+                    } else {
+                        showModal('完成关卡！', '准备进入下一关！', '继续');
+                        initGame();
+                    }
+                } else {
+                    updateDisplay();
+                    updateScore();
+                    showSuggestions();
+                }
+
+                wordInput.value = '';
+            } else {
+                showModal('提示', '这个单词不符合规则或已被使用，请重试！', '确定');
+            }
+        }
+
+        // 显示提示
+        function showHint() {
+            const level = gameData.levels[gameState.currentLevel];
+            hintContainer.textContent = level.description;
+            hintContainer.style.display = 'block';
+        }
+
+        // 显示模态框
+        function showModal(title, message, buttonText) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalButton.textContent = buttonText;
+            modal.style.display = 'flex';
+        }
+
+        // 事件监听
+        submitButton.addEventListener('click', () => {
+            const word = wordInput.value.trim().toLowerCase();
+            if (word) {
+                checkWord(word);
+            }
+        });
+
+        wordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const word = wordInput.value.trim().toLowerCase();
+                if (word) {
+                    checkWord(word);
+                }
+            }
+        });
+
+        document.getElementById('hint-button').addEventListener('click', showHint);
+        document.getElementById('reset-button').addEventListener('click', () => {
+            showModal('重新开始', '确定要重新开始游戏吗？', '确定');
+        });
+        document.getElementById('rules-button').addEventListener('click', () => {
+            showModal('游戏规则', 
+                '1. 观察当前单词的最后一个字母\n' +
+                '2. 输入或选择一个以该字母开头的新单词\n' +
+                '3. 每接对一个单词可得10分\n' +
+                '4. 每接龙5个单词即可进入下一关\n' +
+                '5. 初级模式：不限词性\n' +
+                '6. 进阶模式：需要使用指定词性的单词\n' +
+                '7. 高级模式：需要使用特定主题的单词', 
+                '明白了');
+        });
+
+        modalButton.addEventListener('click', () => {
+            if (modalButton.textContent === '确定' && modalTitle.textContent === '重新开始') {
+                initGame();
+            }
+            modal.style.display = 'none';
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // 启动游戏
+        initGame();
+    </script>
+</body>
+</html>
