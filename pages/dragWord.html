@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
+<head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XG5K3WQ05Y"></script>
     <script>
@@ -10,7 +10,6 @@
 
       gtag('config', 'G-XG5K3WQ05Y');
     </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>词语拖拽拼搭 - 趣味汉字组词游戏 | 汉字游戏乐园</title>
@@ -96,75 +95,65 @@
         </ol>
     </nav>
     
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XG5K3WQ05Y"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XG5K3WQ05Y');
-    </script>
-
-        <div class="header-content">
-            <a href="../index.html" class="back-button">返回主页</a>
-            <h1>词语拖拽拼搭</h1>
-            <div class="game-controls">
-                <select id="difficulty">
-                    <option value="easy">初级</option>
-                    <option value="medium">进阶</option>
-                    <option value="hard">高级</option>
-                </select>
-                <button id="soundToggle" class="icon-button">🔊</button>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <div class="game-container">
-            <div class="game-info">
-                <div class="score">得分：<span id="score">0</span></div>
-                <div class="level">关卡：<span id="level">1</span></div>
-            </div>
-
-            <div class="game-area">
-                <div id="questionArea">
-                    <div class="question-text"></div>
-                    <div class="pinyin-hint"></div>
-                </div>
-
-                <div id="dropArea" class="drop-area">
-                    <!-- 拖拽目标区域 -->
-                </div>
-
-                <div id="charactersArea" class="characters-area">
-                    <!-- 可拖拽的汉字将在这里生成 -->
-                </div>
-            </div>
-
-            <div class="controls">
-                <button id="checkAnswer" class="game-button">检查答案</button>
-                <button id="nextQuestion" class="game-button" disabled>下一题</button>
-                <button id="hint" class="game-button">提示</button>
-            </div>
-        </div>
-    </main>
-
-    <div id="resultModal" class="modal">
-        <div class="modal-content">
-            <h2 id="resultTitle"></h2>
-            <p id="resultMessage"></p>
-            <div id="wordExplanation"></div>
-            <button id="closeModal" class="game-button">确定</button>
+    <div class="header-content">
+        <a href="../index.html" class="back-button">返回主页</a>
+        <h1>词语拖拽拼搭</h1>
+        <div class="game-controls">
+            <select id="difficulty">
+                <option value="easy">初级</option>
+                <option value="medium">进阶</option>
+                <option value="hard">高级</option>
+            </select>
+            <button id="soundToggle" class="icon-button">🔊</button>
         </div>
     </div>
+</header>
 
-    <footer class="footer">
-        <p>&copy; 2024 汉字游戏乐园 by lickfeng</p>
-        <p>交流讨论请添加微信：lick-feng</p>
-    </footer>
+<main>
+    <div class="game-container">
+        <div class="game-info">
+            <div class="score">得分：<span id="score">0</span></div>
+            <div class="level">关卡：<span id="level">1</span></div>
+        </div>
 
-    <script src="../data/dragWord/questions.js"></script>
-    <script src="../js/games/dragWord.js"></script>
+        <div class="game-area">
+            <div id="questionArea">
+                <div class="question-text"></div>
+                <div class="pinyin-hint"></div>
+            </div>
+
+            <div id="dropArea" class="drop-area">
+                <!-- 拖拽目标区域 -->
+            </div>
+
+            <div id="charactersArea" class="characters-area">
+                <!-- 可拖拽的汉字将在这里生成 -->
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="checkAnswer" class="game-button">检查答案</button>
+            <button id="nextQuestion" class="game-button" disabled>下一题</button>
+            <button id="hint" class="game-button">提示</button>
+        </div>
+    </div>
+</main>
+
+<div id="resultModal" class="modal">
+    <div class="modal-content">
+        <h2 id="resultTitle"></h2>
+        <p id="resultMessage"></p>
+        <div id="wordExplanation"></div>
+        <button id="closeModal" class="game-button">确定</button>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2024 汉字游戏乐园 by lickfeng</p>
+    <p>交流讨论请添加微信：lick-feng</p>
+</footer>
+
+<script src="../data/dragWord/questions.js"></script>
+<script src="../js/games/dragWord.js"></script>
 </body>
 </html>
