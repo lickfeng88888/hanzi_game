@@ -36,4 +36,8 @@
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
+    <url>
+        <loc>https://your-domain.com/favicon.png</loc>
+        <lastmod>2024-03-21</lastmod>
+    </url>
 </urlset>
