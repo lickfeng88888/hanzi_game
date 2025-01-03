@@ -651,3 +651,10 @@ hanzi_game/
 
 ### v2.2.0 (2024-01-18)
 {{ ... }}
+
+## 部署信息
+- 生产环境：https://www.zwhanzigame.com
+- Vercel 部署：[Vercel项目链接]
+
+## 站点地图
+站点地图访问地址：https://www.zwhanzigame.com/sitemap.xml
