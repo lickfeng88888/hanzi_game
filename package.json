@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "serve .",
-    "build": "mkdir -p public && cp -r * public/ || true",
-    "start": "serve public"
+    "build": "echo 'Static site, no build needed'",
+    "start": "serve ."
   },
   "dependencies": {
     "serve": "^14.0.0"
