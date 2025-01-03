@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build": "cp sitemap.xml public/",
+    "postbuild": "cp robots.txt public/"
+  }
+} 

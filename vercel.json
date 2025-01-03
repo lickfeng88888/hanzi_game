@@ -7,16 +7,23 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
+          "value": "no-store, no-cache, must-revalidate"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
         }
       ]
     }
   ],
-  "redirects": [
+  "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "https://www.zwhanzigame.com/sitemap.xml",
-      "permanent": true
+      "destination": "/sitemap.xml"
     }
   ]
 } 
