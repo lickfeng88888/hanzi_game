@@ -1,6 +1,13 @@
 {
+  "name": "hanzi-game",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "build": "cp sitemap.xml public/",
-    "postbuild": "cp robots.txt public/"
+    "dev": "serve .",
+    "build": "mkdir -p public && cp -r * public/ || true",
+    "start": "serve public"
+  },
+  "dependencies": {
+    "serve": "^14.0.0"
   }
 } 
